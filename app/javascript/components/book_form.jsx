@@ -1,0 +1,289 @@
+import React from 'react';
+import TagsInput from '../components/tags_input';
+import { Link } from "react-router-dom";
+
+class BookForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.emptyAuthor = {
+      id: null,
+      name: '',
+      errors: {},
+      _destroy: false
+    };
+
+    this.state = {
+      book: {
+        id: null,
+        title: '',
+        publisher: {
+          id: null,
+          name: '',
+          errors: {}
+        },
+        published_at: null,
+        errors: {},
+        authors: [Object.assign({}, this.emptyAuthor)],
+        subjects: []
+      }
+    };
+  }
+
+  componentDidMount() {
+    if (this.props.match.params.id) {
+      const url = `/api/v1/show/${this.props.match.params.id}`;
+  
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok.");
+        })
+        .then(response => this.setState({ book: response }))
+        .catch(() => this.props.history.push("/catalog"));
+    }
+  }
+
+  handleCancel() {
+    this.props.history.push('/catalog');
+  }
+  
+  handleFormSubmit(event) {
+    event.preventDefault();
+
+    const method = this.state.book.id ? 'PATCH' : 'POST';
+    const url = this.state.book.id
+      ? `/api/v1/books/${this.state.book.id}`
+      : '/api/v1/books/create';
+
+    // Evading the holy Unpermitted Parameter errors by sending only relevant keys
+    const book = this.state.book;
+    
+    const authors = [];
+    book.authors.forEach(author => {
+      authors.push({ id: author.id, name: author.name, _destroy: author._destroy });
+    });
+
+    const subjects = [];
+    book.subjects.forEach((value, index) => {
+      subjects.push({ id: index, name: value, _destroy: false });
+    });
+
+    const body = {
+      book: {
+        id: book.id,
+        title: book.title,
+        publisher: book.publisher,
+        published_at: book.published_at,
+        authors_attributes: authors,
+        subjects_attributes: subjects
+      }
+    };
+
+    const token = document.querySelector('meta[name="csrf-token"]').content;
+    fetch(url, {
+      method: method,
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+      .then(response => response.json())
+      .then(json => {
+        // Renaming the `authors_attributes` and `subjects_attributes`
+        // properties to `authors` and `subjects` respectively
+        delete Object.assign(json, { authors: json.authors_attributes }).authors_attributes;
+
+        json.subjects = [];
+        json.subjects_attributes.map(subject => {
+          json.subjects.push(subject);
+        })
+        delete json.subjects_attributes;
+        
+        console.info(json);
+        this.setState({ book: json });
+      })
+      // .then(response => this.props.history.push(`/book/${response.id}`))
+  }
+
+  handleAddAuthor(event) {
+    event.preventDefault();
+    this.state.book.authors.push(Object.assign({}, this.emptyAuthor));
+    this.setState({ book: this.state.book });
+  }
+
+  handleRemoveAuthor(event, author) {
+    event.preventDefault();
+    author._destroy = true;
+    this.setState({ book: this.state.book });
+  }
+
+  handleAuthorNameChange(event, author) {
+    author.name = event.target.value;
+    this.setState({ book: this.state.book });
+  }
+
+  handleBookTitleChange(event) {
+    this.state.book.title = event.target.value;
+    this.setState({ book: this.state.book });
+  }
+
+  handleBookPublisherChange(event) {
+    this.state.book.publisher.name = event.target.value;
+    this.setState({ book: this.state.book })
+  }
+
+  handleSubjectTagAdd(index, tag) {
+    this.state.book.subjects.push(tag);
+    console.info(index, tag);
+  }
+
+  handleSubjectTagRemove(index) {
+    this.state.book.subjects.splice(index, 1);
+    console.info(index);
+  }
+
+  renderAuthorInlineError(author) {
+    if (author.errors.name) {
+      return (
+        <div className="inline-error alert alert-danger">
+          {author.errors.name.join(', ')}
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  renderBookTitleInlineError() {
+    if (this.state.book.errors.title) {
+      return (
+        <div className="inline-error alert alert-danger">
+          {this.state.book.errors.title.join(', ')}
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  renderBookPublisherInlineError() {
+    if (this.state.book.publisher.errors.name) {
+      return (
+        <div className="inline-error alert alert-danger">
+          {this.state.book.publisher.errors.name.join(', ')}
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  renderSubjectsForm() {
+    let tags = [];
+
+    this.state.book.subjects.map((subject) => {
+      tags.push(subject.name);
+    })
+    
+    return (
+      <div className="subject-tags">
+        <TagsInput onAddTag={(index, name) => this.handleSubjectTagAdd(index, name)}
+                   onRemoveTag={(index) => this.handleSubjectTagRemove(index)}
+                   placeholder="Press enter to add subject"
+                   tags={tags} />
+      </div>
+    )
+  }
+
+  renderAuthorsForm() {
+    return this.state.book.authors.map((author, index) => {
+      if (author._destroy === false) {
+        return (
+          <div className="author-form" key={index}>
+            <div className="form-group">
+              <div className="clearfix" style={{ marginBottom: 5 }}>
+                <input
+                  onChange={event => this.handleAuthorNameChange(event, author)}
+                  type="text"
+                  value={author.name}
+                  className="form-control"
+                />
+                <button
+                  className="btn btn-danger"
+                  style={{ padding: '5px 10px', float: 'right' }}
+                  onClick={event => this.handleRemoveAuthor(event, author)}>
+                  Remove
+                </button>
+              </div>
+              {this.renderAuthorInlineError(author)}
+            </div>
+          </div>
+        );
+      } else {
+        return null;
+      }
+    });
+  }
+
+  render() {
+    return (
+      <div className="BookForm">
+        <form>
+          <div className="form-group">
+            <label>Title</label>
+            <input
+              type="text"
+              onChange={event => this.handleBookTitleChange(event)}
+              value={this.state.book.title}
+              className="form-control"
+            />
+            {this.renderBookTitleInlineError()}
+          </div>
+          <div className="form-group">
+            <label>Publisher</label>
+            <input
+              type="text"
+              onChange={event => this.handleBookPublisherChange(event)}
+              value={this.state.book.publisher.name}
+              className="form-control"
+            />
+            {this.renderBookPublisherInlineError()}
+          </div>
+          <hr />
+          <div className="authors-fieldset">
+            <label>Authors</label>
+            {this.renderAuthorsForm()}
+            <button
+              className="btn btn-success"
+              onClick={event => this.handleAddAuthor(event)}>
+              Add
+            </button>
+          </div>
+          <hr />
+          <div className="subjects-fieldset">
+            <label>Subjects</label>
+            {this.renderSubjectsForm()}
+          </div>
+          <hr />
+          <button
+            onClick={event => this.handleFormSubmit(event)}
+            className="btn btn-primary">
+            Save
+          </button>
+          &nbsp;
+          <button
+            onClick={() => this.handleCancel()}
+            className="btn btn-danger">
+            Cancel
+          </button>{' '}
+        </form>
+      </div>
+    );
+  }
+}
+
+export default BookForm;
