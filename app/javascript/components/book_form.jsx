@@ -110,38 +110,45 @@ class BookForm extends React.Component {
   }
 
   handleAddAuthor(event) {
+    console.info('handleAddAuthor');
     event.preventDefault();
     this.state.book.authors.push(Object.assign({}, this.emptyAuthor));
     this.setState({ book: this.state.book });
   }
 
   handleRemoveAuthor(event, author) {
+    console.info('handleRemoveAuthor');
     event.preventDefault();
     author._destroy = true;
     this.setState({ book: this.state.book });
   }
 
   handleAuthorNameChange(event, author) {
+    console.info('handleAuthorNameChange');
     author.name = event.target.value;
     this.setState({ book: this.state.book });
   }
 
   handleBookTitleChange(event) {
+    console.info('handleBookTitleChange');
     this.state.book.title = event.target.value;
     this.setState({ book: this.state.book });
   }
 
   handleBookPublisherChange(event) {
+    console.info('handleBookPublisherChange');
     this.state.book.publisher.name = event.target.value;
     this.setState({ book: this.state.book })
   }
 
   handleSubjectTagAdd(index, tag) {
+    console.info('handleSubjectTagAdd');
     this.state.book.subjects.push(tag);
     console.info(index, tag);
   }
 
   handleSubjectTagRemove(index) {
+    console.info('handleSubjectTagRemove');
     this.state.book.subjects.splice(index, 1);
     console.info(index);
   }
