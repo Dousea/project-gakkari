@@ -193,7 +193,8 @@ class BookForm extends React.Component {
       <div className="subject-tags">
         <TagsInput onAddTag={(index, name) => this.handleSubjectTagAdd(index, name)}
                    onRemoveTag={(index) => this.handleSubjectTagRemove(index)}
-                   placeholder="Press enter to add subject"
+                   handleKey=","
+                   placeholder="Press comma to add subject"
                    tags={tags} />
       </div>
     )
