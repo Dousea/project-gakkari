@@ -20,6 +20,8 @@ class Api::V1::BooksController < ApplicationController
     book.publisher = Publisher.where(name: book_params[:publisher]).first_or_create
 
     book_params[:authors_attributes].map do |author|
+      next if author[:_destroy]
+      
       author_record = Author.where(name: author[:name]).first
 
       if !!author_record
@@ -30,6 +32,10 @@ class Api::V1::BooksController < ApplicationController
     end
 
     book_params[:subjects_attributes].map do |subject|
+      next if subject[:_destroy] # is it really necessary here? because in the
+                                 # book_form.jsx, the `subject` parameter would
+                                 # not send any `_destroy = true` on creation
+
       subject_record = Subject.where(name: subject[:name]).first
 
       if !!subject_record
