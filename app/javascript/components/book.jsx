@@ -4,7 +4,18 @@ import { Link } from "react-router-dom";
 class Book extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { book: null };
+    
+    this.state = {
+      book: {
+        title: '',
+        publisher: {
+          name: '',
+        },
+        published_at: new Date(),
+        authors: [],
+        subjects: []
+      }
+    };
   }
 
   componentDidMount() {
