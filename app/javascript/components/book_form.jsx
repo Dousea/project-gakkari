@@ -108,8 +108,9 @@ class BookForm extends React.Component {
         
         console.info(json);
         this.setState({ book: json });
+        return json.id
       })
-      // .then(response => this.props.history.push(`/book/${response.id}`))
+      .then(response => this.props.history.push(`/books/${response}`))
   }
 
   handleAddAuthor(event) {
