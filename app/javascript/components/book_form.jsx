@@ -1,5 +1,6 @@
 import React from 'react';
 import TagsInput from '../components/tags_input';
+import DatePicker from 'react-date-picker';
 import { Link } from "react-router-dom";
 
 class BookForm extends React.Component {
@@ -22,7 +23,7 @@ class BookForm extends React.Component {
           name: '',
           errors: {}
         },
-        published_at: null,
+        published_at: new Date(),
         errors: {},
         authors: [Object.assign({}, this.emptyAuthor)],
         subjects: []
@@ -138,7 +139,12 @@ class BookForm extends React.Component {
   handleBookPublisherChange(event) {
     console.info('handleBookPublisherChange');
     this.state.book.publisher.name = event.target.value;
-    this.setState({ book: this.state.book })
+    this.setState({ book: this.state.book });
+  }
+
+  handleBookPublishedDateChange(date) {
+    this.state.book.published_at = date;
+    this.setState({ book: this.state.book });
   }
 
   handleSubjectTagAdd(index, tag) {
@@ -237,6 +243,18 @@ class BookForm extends React.Component {
     });
   }
 
+  renderPublishedDatePickerForm() {
+    return (
+      <div>
+        <DatePicker
+          onChange={date => this.handleBookPublishedDateChange(date)}
+          value={this.state.book.published_at}
+          maxDate={this.state.book.published_at}
+        />
+      </div>
+    )
+  }
+
   render() {
     return (
       <div className="BookForm">
@@ -260,6 +278,10 @@ class BookForm extends React.Component {
               className="form-control"
             />
             {this.renderBookPublisherInlineError()}
+          </div>
+          <div className="form-group">
+            <label>Published at</label>
+            {this.renderPublishedDatePickerForm()}
           </div>
           <hr />
           <div className="authors-fieldset">
