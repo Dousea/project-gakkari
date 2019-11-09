@@ -48,10 +48,12 @@ class BookForm extends React.Component {
   }
 
   handleCancel() {
+    console.info('handleCancel');
     this.props.history.push('/catalog');
   }
   
   handleFormSubmit(event) {
+    console.info('handleFormSubmit');
     event.preventDefault();
 
     const method = this.state.book.id ? 'PATCH' : 'POST';
