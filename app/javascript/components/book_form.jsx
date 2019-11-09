@@ -76,7 +76,7 @@ class BookForm extends React.Component {
       book: {
         id: book.id,
         title: book.title,
-        publisher: book.publisher,
+        publisher: book.publisher.name,
         published_at: book.published_at,
         authors_attributes: authors,
         subjects_attributes: subjects
