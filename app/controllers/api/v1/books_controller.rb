@@ -12,8 +12,32 @@ class Api::V1::BooksController < ApplicationController
   end
 
   def create
-    book = Book.new(book_params.except(:publisher))
+    book = Book.new
+    # book_params passed :id symbols to the models but here we are creating
+    # new record, so we don't need them
+    book.title = book_params[:title]
+    book.published_at = book_params[:published_at]
     book.publisher = Publisher.where(name: book_params[:publisher]).first_or_create
+
+    book_params[:authors_attributes].map do |author|
+      author_record = Author.where(name: author[:name]).first
+
+      if !!author_record
+        book.authors << author_record
+      else
+        book.authors.build(name: author[:name])
+      end
+    end
+
+    book_params[:subjects_attributes].map do |subject|
+      subject_record = Subject.where(name: subject[:name]).first
+
+      if !!subject_record
+        book.subjects << subject_record
+      else
+        book.subjects.build(name: subject[:name])
+      end
+    end
 
     result = book.save
 
