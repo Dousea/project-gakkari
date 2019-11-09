@@ -249,7 +249,7 @@ class BookForm extends React.Component {
         <DatePicker
           onChange={date => this.handleBookPublishedDateChange(date)}
           value={this.state.book.published_at}
-          maxDate={this.state.book.published_at}
+          maxDate={new Date()}
         />
       </div>
     )
