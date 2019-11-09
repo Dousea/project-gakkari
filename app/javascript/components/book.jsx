@@ -35,7 +35,7 @@ class Book extends React.Component {
         throw new Error("Network response was not ok.");
       })
       .then(response => this.setState({ book: response }))
-      .catch(() => this.props.history.push("/books"));
+      .catch(() => this.props.history.push("/catalog"));
   }
 
   render() {
