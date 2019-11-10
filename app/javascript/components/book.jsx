@@ -38,6 +38,34 @@ class Book extends React.Component {
       .catch(() => this.props.history.push("/catalog"));
   }
 
+  handleDeleteBook() {
+    console.info('handleDeleteBook');
+    
+    const {
+      match: {
+        params: { id }
+      }
+    } = this.props;
+    const url = `/api/v1/destroy/${id}`;
+    const token = document.querySelector('meta[name="csrf-token"]').content;
+
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then(() => this.props.history.push("/catalog"))
+      .catch(error => console.error(error.message));
+  }
+
   render() {
     const { book } = this.state;
 
@@ -51,7 +79,9 @@ class Book extends React.Component {
           </div>
           <div className="row">
             <div className="col-sm-12 col-lg-2">
-              <button type="button" className="btn btn-danger">
+              <button type="button"
+                      className="btn btn-danger"
+                      onClick={() => this.handleDeleteBook()}>
                 Delete Book
               </button>
             </div>
