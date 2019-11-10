@@ -35,7 +35,7 @@ class Book extends React.Component {
         throw new Error("Network response was not ok.");
       })
       .then(response => this.setState({ book: response }))
-      .catch(() => this.props.history.push("/catalog"));
+      .catch(() => this.props.history.push("/books"));
   }
 
   handleDeleteBook() {
@@ -62,7 +62,7 @@ class Book extends React.Component {
         }
         throw new Error("Network response was not ok.");
       })
-      .then(() => this.props.history.push("/catalog"))
+      .then(() => this.props.history.push("/books"))
       .catch(error => console.error(error.message));
   }
 
@@ -86,7 +86,7 @@ class Book extends React.Component {
               </button>
             </div>
           </div>
-          <Link to="/catalog" className="btn btn-link">
+          <Link to="/books" className="btn btn-link">
             Back to books
           </Link>
         </div>

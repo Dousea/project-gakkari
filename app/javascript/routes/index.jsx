@@ -9,9 +9,9 @@ export default (
   <Router>
     <Switch>
       <Route path="/" exact component={Home} />
-      <Route path="/catalog" exact component={Books} />
+      <Route path="/books" exact component={Books} />
       <Route path="/books/:id" exact component={Book} />
-      <Route path="/books" exact component={NewBook} />
+      <Route path="/new_book" exact component={NewBook} />
     </Switch>
   </Router>
 );

@@ -43,13 +43,13 @@ class BookForm extends React.Component {
           throw new Error("Network response was not ok.");
         })
         .then(response => this.setState({ book: response }))
-        .catch(() => this.props.history.push("/catalog"));
+        .catch(() => this.props.history.push("/books"));
     }
   }
 
   handleCancel() {
     console.info('handleCancel');
-    this.props.history.push('/catalog');
+    this.props.history.push('/books');
   }
   
   handleFormSubmit(event) {

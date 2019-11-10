@@ -39,7 +39,7 @@ class Books extends React.Component {
     const noBook = (
       <div className="vw-100 vh-50 d-flex align-items-center justify-content-center">
         <h4>
-          No books yet. Why not <Link to="/books">create one</Link>
+          No books yet. Why not <Link to="/new_book">create one</Link>
         </h4>
       </div>
     );
@@ -59,7 +59,7 @@ class Books extends React.Component {
         <div className="py-5">
           <main className="container">
             <div className="text-right mb-3">
-              <Link to="/books" className="btn custom-button">
+              <Link to="/new_book" className="btn custom-button">
                 Create New Book
               </Link>
             </div>
