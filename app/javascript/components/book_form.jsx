@@ -1,6 +1,7 @@
 import React from 'react';
 import TagsInput from '../components/tags_input';
 import DatePicker from 'react-date-picker';
+import moment from 'moment';
 import { Link } from "react-router-dom";
 
 class BookForm extends React.Component {
@@ -23,7 +24,7 @@ class BookForm extends React.Component {
           name: '',
           errors: {}
         },
-        published_at: new Date(),
+        published_at: moment.utc(),
         errors: {},
         authors: [Object.assign({}, this.emptyAuthor)],
         subjects: []
@@ -79,7 +80,7 @@ class BookForm extends React.Component {
         id: book.id,
         title: book.title,
         publisher: book.publisher.name,
-        published_at: book.published_at,
+        published_at: book.published_at.toISOString(),
         authors_attributes: authors,
         subjects_attributes: subjects
       }
@@ -105,7 +106,10 @@ class BookForm extends React.Component {
           json.subjects.push(subject);
         })
         delete json.subjects_attributes;
-        
+
+        // Transform `published_at` type from string to `moment` object
+        json.published_at = moment.utc(json.published_at);
+
         console.info(json);
         this.setState({ book: json });
 
@@ -151,7 +155,7 @@ class BookForm extends React.Component {
   }
 
   handleBookPublishedDateChange(date) {
-    this.state.book.published_at = date;
+    this.state.book.published_at = moment.utc(date);
     this.setState({ book: this.state.book });
   }
 
@@ -256,8 +260,8 @@ class BookForm extends React.Component {
       <div>
         <DatePicker
           onChange={date => this.handleBookPublishedDateChange(date)}
-          value={this.state.book.published_at}
-          maxDate={new Date()}
+          value={this.state.book.published_at.local().toDate()}
+          maxDate={moment().toDate()}
         />
       </div>
     )
