@@ -16,7 +16,7 @@ class Api::V1::BooksController < ApplicationController
     # book_params passed :id symbols to the models but here we are creating
     # new record, so we don't need them
     book.title = book_params[:title]
-    book.published_at = book_params[:published_at]
+    book.published_at = Time.parse(book_params[:published_at]).to_date
     book.publisher = Publisher.where(name: book_params[:publisher]).first_or_create
 
     book_params[:authors_attributes].map do |author|
