@@ -15,6 +15,13 @@ class BookForm extends React.Component {
       _destroy: false
     };
 
+    this.emptySubject = {
+      id: null,
+      name: '',
+      errors: {},
+      _destroy: false
+    }
+
     this.state = {
       book: {
         id: null,
@@ -71,8 +78,11 @@ class BookForm extends React.Component {
     });
 
     const subjects = [];
-    book.subjects.forEach((value, index) => {
-      subjects.push({ id: index, name: value, _destroy: false });
+    book.subjects.forEach(subject => {
+      // If the `id` is null and needs to be destroyed then it is still a new
+      // record and doesn't need to be passed to controller
+      if (!(subject.id === null && subject._destroy === true))
+        subjects.push({ id: subject.id, name: subject.name, _destroy: subject._destroy });
     });
 
     const body = {
@@ -161,13 +171,21 @@ class BookForm extends React.Component {
 
   handleSubjectTagAdd(index, tag) {
     console.info('handleSubjectTagAdd');
-    this.state.book.subjects.push(tag);
+
+    let newSubject = Object.assign({}, this.emptySubject);
+    newSubject.name = tag;
+    this.state.book.subjects.push(newSubject);
+    this.setState({ book: this.state.book });
+
     console.info(index, tag);
   }
 
   handleSubjectTagRemove(index) {
     console.info('handleSubjectTagRemove');
-    this.state.book.subjects.splice(index, 1);
+
+    this.state.book.subjects[index]._destroy = true;
+    this.setState({ book: this.state.book });
+
     console.info(index);
   }
 
@@ -211,7 +229,8 @@ class BookForm extends React.Component {
     let tags = [];
 
     this.state.book.subjects.map((subject) => {
-      tags.push(subject.name);
+      if (subject._destroy === false)
+        tags.push(subject.name);
     })
     
     return (
