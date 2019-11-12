@@ -227,7 +227,19 @@ class BookForm extends React.Component {
 
   renderAuthorsForm() {
     return this.state.book.authors.map((author, index) => {
-      if (author._destroy === false) {
+      if (author._destroy == false) {
+        let removeButton = null;
+        
+        if (this.state.book.authors.filter((value) => value._destroy === false).length > 1) 
+          removeButton = (
+            <button
+              className="btn btn-danger"
+              style={{ padding: '5px 10px', float: 'right' }}
+              onClick={event => this.handleRemoveAuthor(event, author)}>
+              Remove
+            </button>
+          );
+
         return (
           <div className="author-form" key={index}>
             <div className="form-group">
@@ -238,12 +250,7 @@ class BookForm extends React.Component {
                   value={author.name}
                   className="form-control"
                 />
-                <button
-                  className="btn btn-danger"
-                  style={{ padding: '5px 10px', float: 'right' }}
-                  onClick={event => this.handleRemoveAuthor(event, author)}>
-                  Remove
-                </button>
+                {removeButton}
               </div>
               {this.renderAuthorInlineError(author)}
             </div>
