@@ -108,9 +108,14 @@ class BookForm extends React.Component {
         
         console.info(json);
         this.setState({ book: json });
-        return json.id
+
+        if (json.id !== null)
+          return json.id;
+        
+        throw new Error("Submitted form was not ok.");
       })
       .then(response => this.props.history.push(`/books/${response}`))
+      .catch(error => console.error(error));
   }
 
   handleAddAuthor(event) {
