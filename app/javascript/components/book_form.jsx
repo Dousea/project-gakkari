@@ -39,31 +39,7 @@ class BookForm extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (this.props.match.params.id) {
-      const url = `/api/v1/show/${this.props.match.params.id}`;
-  
-      fetch(url)
-        .then(response => response.json())
-        .then(json => this.setState({ book: json }))
-        .catch(() => this.props.history.push("/books"));
-    }
-  }
-
-  handleCancel() {
-    console.info('handleCancel');
-    this.props.history.push('/books');
-  }
-  
-  handleFormSubmit(event) {
-    console.info('handleFormSubmit');
-    event.preventDefault();
-
-    const method = this.state.book.id ? 'PATCH' : 'POST';
-    const url = this.state.book.id
-      ? `/api/v1/books/${this.state.book.id}`
-      : '/api/v1/books/create';
-
+  stateToJson() {
     // Evading the holy Unpermitted Parameter errors by sending only relevant keys
     const book = this.state.book;
     
@@ -80,7 +56,7 @@ class BookForm extends React.Component {
         subjects.push({ id: subject.id, name: subject.name, _destroy: subject._destroy });
     });
 
-    const body = {
+    const json = {
       book: {
         id: book.id,
         title: book.title,
@@ -91,7 +67,54 @@ class BookForm extends React.Component {
       }
     };
 
+    return json;
+  }
+
+  jsonToState(json) {
+    let state = Object.assign({}, json);
+
+    // Renaming the `authors_attributes` and `subjects_attributes`
+    // properties to `authors` and `subjects` respectively
+    delete Object.assign(state, { authors: state.authors_attributes }).authors_attributes;
+
+    state.subjects = [];
+    state.subjects_attributes.map(subject => {
+      state.subjects.push(subject);
+    })
+    delete state.subjects_attributes;
+
+    // Transform `published_at` type from string to `moment` object
+    state.published_at = moment.utc(state.published_at);
+
+    return state;
+  }
+
+  componentDidMount() {
+    if (this.props.match.params.id) {
+      const url = `/api/v1/show/${this.props.match.params.id}`;
+  
+      fetch(url)
+        .then(response => response.json())
+        .then(json => this.setState({ book: this.jsonToState(json) }))
+        .catch(() => this.props.history.push("/books"));
+    }
+  }
+
+  handleCancel() {
+    console.info('handleCancel');
+    this.props.history.push('/books');
+  }
+  
+  handleFormSubmit(event) {
+    console.info('handleFormSubmit');
+    event.preventDefault();
+
+    const method = this.state.book.id ? 'PATCH' : 'POST';
+    const url = this.state.book.id ? `/api/v1/books/${this.state.book.id}`
+                                   : '/api/v1/books/create';
+    const body = this.stateToJson();
     const token = document.querySelector('meta[name="csrf-token"]').content;
+
     fetch(url, {
       method: method,
       headers: {
@@ -102,21 +125,8 @@ class BookForm extends React.Component {
     })
       .then(response => response.json())
       .then(json => {
-        // Renaming the `authors_attributes` and `subjects_attributes`
-        // properties to `authors` and `subjects` respectively
-        delete Object.assign(json, { authors: json.authors_attributes }).authors_attributes;
-
-        json.subjects = [];
-        json.subjects_attributes.map(subject => {
-          json.subjects.push(subject);
-        })
-        delete json.subjects_attributes;
-
-        // Transform `published_at` type from string to `moment` object
-        json.published_at = moment.utc(json.published_at);
-
         console.info(json);
-        this.setState({ book: json });
+        this.setState({ book: this.jsonToState(json) });
 
         if (json.id !== null)
           return json.id;
