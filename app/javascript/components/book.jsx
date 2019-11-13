@@ -38,6 +38,11 @@ class Book extends React.Component {
       .catch(() => this.props.history.push("/books"));
   }
 
+  handleEditBook() {
+    console.info('handleEditBook');
+    this.props.history.push(`/books/${this.props.match.params.id}/edit`);
+  }
+
   handleDeleteBook() {
     console.info('handleDeleteBook');
     
@@ -79,6 +84,11 @@ class Book extends React.Component {
           </div>
           <div className="row">
             <div className="col-sm-12 col-lg-2">
+              <button type="button"
+                      className="btn btn-secondary"
+                      onClick={() => this.handleEditBook()}>
+                Edit Book
+              </button>
               <button type="button"
                       className="btn btn-danger"
                       onClick={() => this.handleDeleteBook()}>

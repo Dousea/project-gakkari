@@ -44,13 +44,8 @@ class BookForm extends React.Component {
       const url = `/api/v1/show/${this.props.match.params.id}`;
   
       fetch(url)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok.");
-        })
-        .then(response => this.setState({ book: response }))
+        .then(response => response.json())
+        .then(json => this.setState({ book: json }))
         .catch(() => this.props.history.push("/books"));
     }
   }
