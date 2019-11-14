@@ -13,6 +13,35 @@ class Api::V1::BooksController < ApplicationController
 
   def create
     book = Book.new
+    book_update_attribs_from_params(book)
+    result = book.save
+
+    render json: book_json(book), status: result ? 200 : 422
+  end
+
+  def update
+    book_update_attribs_from_params(book)
+    result = book.save
+
+    render json: book_json(book), status: result ? 200 : 422
+  end
+
+  def edit
+    render json: book_json(book)
+  end
+
+  def show
+    render json: book_json(book)
+  end
+
+  def destroy
+    book.destroy
+    render json: { result: :ok }
+  end
+
+  private
+
+  def book_update_attribs_from_params(book)
     # book_params passed :id symbols to the models but here we are creating
     # new record, so we don't need them
     book.title = book_params[:title]
@@ -44,32 +73,7 @@ class Api::V1::BooksController < ApplicationController
         book.subjects.build(name: subject[:name])
       end
     end
-
-    result = book.save
-
-    render json: book_json(book), status: result ? 200 : 422
   end
-
-  def update
-    book.attributes = book_params
-    result = book.save
-    render json: book_json(book), status: result ? 200 : 422
-  end
-
-  def edit
-    render json: book_json(book)
-  end
-
-  def show
-    render json: book_json(book)
-  end
-
-  def destroy
-    book.destroy
-    render json: { result: :ok }
-  end
-
-  private
 
   def book_json(book)
     json = {
