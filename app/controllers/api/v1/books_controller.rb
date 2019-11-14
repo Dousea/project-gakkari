@@ -51,7 +51,7 @@ class Api::V1::BooksController < ApplicationController
     book_params[:authors_attributes].map do |author|
       if author[:_destroy] && !author[:id].nil?
         book.authors.delete(Author.find(author[:id]))
-      else
+      elsif !book.authors.exists?(name: author[:name])
         author_record = Author.where(name: author[:name]).first
 
         if !!author_record
@@ -65,7 +65,7 @@ class Api::V1::BooksController < ApplicationController
     book_params[:subjects_attributes].map do |subject|
       if subject[:_destroy] && !subject[:id].nil?
         book.subjects.delete(Subject.find(subject[:id]))
-      else
+      elsif !book.subjects.exists?(name: subject[:name])
         subject_record = Subject.where(name: subject[:name]).first
 
         if !!subject_record
