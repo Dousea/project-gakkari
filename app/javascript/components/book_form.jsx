@@ -75,12 +75,11 @@ class BookForm extends React.Component {
 
     // Renaming the `authors_attributes` and `subjects_attributes`
     // properties to `authors` and `subjects` respectively
-    delete Object.assign(state, { authors: state.authors_attributes }).authors_attributes;
-
-    state.subjects = [];
-    state.subjects_attributes.map(subject => {
-      state.subjects.push(subject);
-    })
+    Object.assign(state, {
+      authors: state.authors_attributes,
+      subjects: state.subjects_attributes
+    });
+    delete state.authors_attributes;
     delete state.subjects_attributes;
 
     // Transform `published_at` type from string to `moment` object
