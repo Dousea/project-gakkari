@@ -49,28 +49,30 @@ class Api::V1::BooksController < ApplicationController
     book.publisher = Publisher.where(name: book_params[:publisher]).first_or_create
 
     book_params[:authors_attributes].map do |author|
-      next if author[:_destroy]
-      
-      author_record = Author.where(name: author[:name]).first
-
-      if !!author_record
-        book.authors << author_record
+      if author[:_destroy] && !author[:id].nil?
+        book.authors.delete(Author.find(author[:id]))
       else
-        book.authors.build(name: author[:name])
+        author_record = Author.where(name: author[:name]).first
+
+        if !!author_record
+          book.authors << author_record
+        else
+          book.authors.build(name: author[:name])
+        end
       end
     end
 
     book_params[:subjects_attributes].map do |subject|
-      next if subject[:_destroy] # is it really necessary here? because in the
-                                 # book_form.jsx, the `subject` parameter would
-                                 # not send any `_destroy = true` on creation
-
-      subject_record = Subject.where(name: subject[:name]).first
-
-      if !!subject_record
-        book.subjects << subject_record
+      if subject[:_destroy] && !subject[:id].nil?
+        book.subjects.delete(Subject.find(subject[:id]))
       else
-        book.subjects.build(name: subject[:name])
+        subject_record = Subject.where(name: subject[:name]).first
+
+        if !!subject_record
+          book.subjects << subject_record
+        else
+          book.subjects.build(name: subject[:name])
+        end
       end
     end
   end
