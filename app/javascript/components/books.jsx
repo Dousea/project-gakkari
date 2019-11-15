@@ -53,7 +53,7 @@ class Books extends React.Component {
               </li>
             </ul>
             <small className="card-footer text-muted">
-              Diperbaharui {moment.utc(book.updated_at).locale("id").fromNow()}
+              Diperbaharui {moment(book.updated_at).fromNow()}
             </small>
           </div>
         </div>
