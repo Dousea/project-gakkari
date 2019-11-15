@@ -13,12 +13,3 @@
  *= require_tree .
  *= require_self
  */
-
-html,
-body {
-  overflow-x: hidden; /* Prevent scroll on narrow devices */
-}
-
-body {
-  padding-top: 56px;
-}
