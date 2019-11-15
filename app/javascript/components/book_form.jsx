@@ -4,6 +4,8 @@ import DatePicker from 'react-date-picker';
 import moment from 'moment';
 import { Link } from "react-router-dom";
 
+import "../stylesheets/tags_input.scss";
+
 class BookForm extends React.Component {
   constructor(props) {
     super(props);
