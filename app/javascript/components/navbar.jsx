@@ -12,6 +12,8 @@ class Navbar extends React.Component {
     $(() => {
       'use strict'
 
+      $('body').css('padding-top', '56px');
+
       $('[data-toggle="offcanvas"]').on('click', () => {
         $('.offcanvas-collapse').toggleClass('open')
       })
