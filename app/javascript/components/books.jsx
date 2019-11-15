@@ -97,7 +97,7 @@ class Books extends React.Component {
             </p>
           </div>
         </section>
-        <div className="album py-5 bg-light">
+        <div className="py-5 bg-light">
           <div className="container">
             {books}
           </div>
