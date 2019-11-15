@@ -12,16 +12,9 @@ class Books extends React.Component {
   }
 
   componentDidMount() {
-    const url = "/api/v1/books/index";
-    fetch(url)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
-      .then(response => this.setState({ books: response }))
-      .catch(() => this.props.history.push("/"));
+    fetch("/api/v1/books/index")
+      .then(response => response.json())
+      .then(json => this.setState({ books: json }));
   }
 
   render() {
