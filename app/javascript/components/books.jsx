@@ -15,6 +15,21 @@ class Books extends React.Component {
     };
   }
 
+  handleDeleteBook(bookId) {
+    fetch(`/api/v1/destroy/${bookId}`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => {
+        if (response.ok) return this.setState(this.state);
+        throw new Error("Network response was not ok.");
+      })
+      .catch(error => console.error(error.message));
+  }
+
   componentDidMount() {
     fetch("/api/v1/books/index")
       .then(response => response.json())
@@ -28,12 +43,9 @@ class Books extends React.Component {
 
     if (this.state.books.length > 0)
       books = this.state.books.map(book => (
-        <div key={book.id} className="col-md-4">
+        <div key={book.id} className="col-lg-4">
           <div className="card mb-4 shadow-sm">
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h5>{book.title}</h5>
-              <Link to={`/books/${book.id}/edit`} className="btn btn-secondary">Edit</Link>
-            </div>
+            <h5 className="card-header">{book.title}</h5>
             <ul className="list-group list-group-flush">
               <li className="list-group-item">
                 <small className="d-block text-muted">Dipublikasikan oleh</small>
@@ -52,9 +64,13 @@ class Books extends React.Component {
                 {book.subjects.join(",")}
               </li>
             </ul>
-            <small className="card-footer text-muted">
-              Diperbaharui {moment(book.updated_at).fromNow()}
-            </small>
+            <div className="card-footer d-flex justify-content-between">
+              <small className="d-none d-sm-block text-muted">Diperbaharui<br/>{moment(book.updated_at).fromNow()}</small>
+              <div className="btn-group">
+                <Link to={`/books/${book.id}/edit`} className="btn btn-outline-secondary">Sunting</Link>
+                <button type="button" className="btn btn-outline-danger" onClick={() => this.handleDeleteBook(book.id)}>Hapus</button>
+              </div>
+            </div>
           </div>
         </div>
       ));
