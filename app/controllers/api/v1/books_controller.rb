@@ -7,7 +7,8 @@ class Api::V1::BooksController < ApplicationController
         publisher: book.publisher.name,
         published_at: book.published_at,
         authors: book.authors.map { |author| author.name },
-        subjects: book.subjects.map { |subject| subject.name }
+        subjects: book.subjects.map { |subject| subject.name },
+        created_at: book.created_at
       }
     end
 
