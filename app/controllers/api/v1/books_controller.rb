@@ -4,7 +4,10 @@ class Api::V1::BooksController < ApplicationController
       {
         id: book.id,
         title: book.title,
-        publisher: book.publisher.name
+        publisher: book.publisher.name,
+        published_at: book.published_at,
+        authors: book.authors.map { |author| author.name },
+        subjects: book.subjects.map { |subject| subject.name }
       }
     end
 
