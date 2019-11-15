@@ -38,7 +38,9 @@ class Books extends React.Component {
 
   render() {
     let books = (
-      <h4>Tidak ada buku yang tersedia.</h4>
+      <div className="d-flex justify-content-center">
+        <h4 className="text-center">Tidak ada buku yang tersedia.</h4>
+      </div>
     );
 
     if (this.state.books.length > 0)
