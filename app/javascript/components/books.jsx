@@ -41,7 +41,7 @@ class Books extends React.Component {
               </li>
               <li className="list-group-item">
                 <small className="d-block text-muted">Dipublikasikan pada</small>
-                {book.published_at}
+                {moment(book.published_at).local().format("LL")}
               </li>
               <li className="list-group-item">
                 <small className="d-block text-muted">Ditulis oleh</small>
