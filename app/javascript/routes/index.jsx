@@ -6,14 +6,22 @@ import Books from "../components/books";
 import NewBook from "../components/new_book";
 import EditBook from "../components/edit_book";
 
+const NavRoute = ({path, exact, component: Component}) => (
+  <Route path={path} exact={exact} render={(props) => (
+    <div>
+      <Navbar {...props}/>
+      <Component {...props}/>
+    </div>
+  )}/>
+)
+
 export default (
   <Router>
-    <Navbar/>
     <Switch>
       <Route path="/" exact component={Home} />
-      <Route path="/books" exact component={Books} />
-      <Route path="/books/:id/edit" exact component={EditBook} />
-      <Route path="/new_book" exact component={NewBook} />
+      <NavRoute path="/books" exact component={Books} />
+      <NavRoute path="/books/:id/edit" exact component={EditBook} />
+      <NavRoute path="/new_book" exact component={NewBook} />
     </Switch>
   </Router>
 );
