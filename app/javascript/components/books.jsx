@@ -84,8 +84,8 @@ class Books extends React.Component {
               Persediaan buku yang ada dalam Perpustakaan Gakkari.
               Rincian buku juga ditampilkan.
             </p>
-            <hr className="my-4" />
-            <p>
+            <hr className="d-none d-sm-block my-4" />
+            <p className="d-none d-sm-block">
               Jika ada kesalahan tolong hubungi staff kami atau
               jadilah anggota dalam Perpustakaan Gakkari!
             </p>
