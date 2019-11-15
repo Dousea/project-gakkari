@@ -1,11 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 import "../stylesheets/books.scss";
 
 class Books extends React.Component {
   constructor(props) {
     super(props);
+
+    moment.locale("id");
+
     this.state = {
       books: []
     };
@@ -49,7 +53,7 @@ class Books extends React.Component {
               </li>
             </ul>
             <small className="card-footer text-muted">
-              {book.created_at}
+              Diperbaharui {moment.utc(book.updated_at).locale("id").fromNow()}
             </small>
           </div>
         </div>
