@@ -37,48 +37,60 @@ class Books extends React.Component {
   }
 
   render() {
-    let books = (
+    let newBookButton = (
       <div className="d-flex justify-content-center">
-        <h4 className="text-center">Tidak ada buku yang tersedia.</h4>
+        <Link to="/new_book" className="btn btn-outline-primary">Masukkan Buku</Link>
       </div>
+    );
+
+    let books = (
+      <>
+        <div className="d-flex justify-content-center mb-2">
+          <h4 className="text-center">Tidak ada buku yang tersedia.</h4>
+        </div>
+        {newBookButton}
+      </>
     );
 
     if (this.state.books.length > 0)
       books = (
-        <div className="row">
-          {this.state.books.map(book => (
-            <div key={book.id} className="col-lg-4">
-              <div className="card mb-4 shadow-sm">
-                <h5 className="card-header">{book.title}</h5>
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item">
-                    <small className="d-block text-muted">Dipublikasikan oleh</small>
-                    {book.publisher}
-                  </li>
-                  <li className="list-group-item">
-                    <small className="d-block text-muted">Dipublikasikan pada</small>
-                    {moment(book.published_at).local().format("LL")}
-                  </li>
-                  <li className="list-group-item">
-                    <small className="d-block text-muted">Ditulis oleh</small>
-                    {book.authors.join(",")}
-                  </li>
-                  <li className="list-group-item">
-                    <small className="d-block text-muted">Subyek</small>
-                    {book.subjects.join(",")}
-                  </li>
-                </ul>
-                <div className="card-footer d-flex justify-content-between">
-                  <small className="d-none d-sm-block text-muted">Diperbaharui<br/>{moment(book.updated_at).fromNow()}</small>
-                  <div className="btn-group">
-                    <Link to={`/books/${book.id}/edit`} className="btn btn-outline-secondary">Sunting</Link>
-                    <button type="button" className="btn btn-outline-danger" onClick={() => this.handleDeleteBook(book.id)}>Hapus</button>
+        <>
+          {newBookButton}
+          <div className="row mt-2">
+            {this.state.books.map(book => (
+              <div key={book.id} className="col-lg-4">
+                <div className="card mb-4 shadow-sm">
+                  <h5 className="card-header">{book.title}</h5>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item">
+                      <small className="d-block text-muted">Dipublikasikan oleh</small>
+                      {book.publisher}
+                    </li>
+                    <li className="list-group-item">
+                      <small className="d-block text-muted">Dipublikasikan pada</small>
+                      {moment(book.published_at).local().format("LL")}
+                    </li>
+                    <li className="list-group-item">
+                      <small className="d-block text-muted">Ditulis oleh</small>
+                      {book.authors.join(",")}
+                    </li>
+                    <li className="list-group-item">
+                      <small className="d-block text-muted">Subyek</small>
+                      {book.subjects.join(",")}
+                    </li>
+                  </ul>
+                  <div className="card-footer d-flex justify-content-between">
+                    <small className="d-none d-sm-block text-muted">Diperbaharui<br/>{moment(book.updated_at).fromNow()}</small>
+                    <div className="btn-group">
+                      <Link to={`/books/${book.id}/edit`} className="btn btn-outline-secondary">Sunting</Link>
+                      <button type="button" className="btn btn-outline-danger" onClick={() => this.handleDeleteBook(book.id)}>Hapus</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       );
     
     return (
