@@ -212,30 +212,20 @@ class BookForm extends React.Component {
       .then(json => {
         let state = this.jsonToState(json);
         console.info(state);
-        this.setState(state);
 
-        if (state.id === null)        
+        if (state.id !== null)
+          this.resetState();
+        else {
+          this.setState(state);
           throw new Error("Submitted form was not ok.");
+        }
       })
       .catch(error => console.error(error));
   }
   
   componentDidMount() {
-    const resetPublishedAtInputs = () => {
-      let publishedAt = this.state.published_at.local();
-      $("#form-published-at-date-month-input").val(publishedAt.date());
-      $("#form-published-at-month-input").val(publishedAt.month());
-      $("#form-published-at-year-input").val(publishedAt.year());
-    };
-    const resetForm = () => {
-      this.resetState();
-      resetPublishedAtInputs();
-    };
-
-    resetPublishedAtInputs();
-
     $(`#${this.props.id}`)
-      .on("reset", () => setTimeout(() => resetForm(), 1))
+      .on("reset", () => setTimeout(() => this.resetState(), 1))
       .on("submit", event => { event.preventDefault(); this.handleSubmission(); });
   }
   
@@ -294,13 +284,15 @@ class BookForm extends React.Component {
               <small className="text-muted mb-1">Tanggal</small>
               <input type="number" className="form-control" id="form-published-at-date-month-input"
                      onChange={event => this.handlePublishedAtDateMonthChange(event)}
+                     value={this.state.published_at.local().date()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan hari yang benar.</div>
             </div>
             <div className="form-group col-sm-5">
               <small className="text-muted mb-1">Bulan</small>
               <select className="custom-select" id="form-published-at-month-input"
-                      onChange={event => this.handlePublishedAtMonthChange(event)}>
+                      onChange={event => this.handlePublishedAtMonthChange(event)}
+                      value={this.state.published_at.local().month()}>
                 {moment.months().map((month, index) => (
                   <option value={index} key={index}>{month}</option>
                 ))}
@@ -311,6 +303,7 @@ class BookForm extends React.Component {
               <small className="text-muted mb-1">Tahun</small>
               <input type="number" className="form-control" id="form-published-at-year-input"
                      onChange={event => this.handlePublishedAtYearChange(event)}
+                     value={this.state.published_at.local().year()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan tahun yang benar.</div>
             </div>
