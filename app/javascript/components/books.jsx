@@ -26,8 +26,11 @@ class Books extends React.Component {
       }
     })
       .then(response => {
-        if (response.ok) return this.setState(this.state);
-        throw new Error("Network response was not ok.");
+        if (response.ok) {
+          this.state.books = this.state.books.filter(book => book.id !== bookId);
+          this.setState(this.state);
+        } else
+          throw new Error("Network response was not ok.");
       })
       .catch(error => console.error(error.message));
   }
