@@ -137,7 +137,7 @@ class BookForm extends React.Component {
       yearInput.val(this.state.published_at.local().year());
     else {
       let year = yearInput.val();
-      console.info(`handlePublishedAtDateMonthChange ${year}`);
+      console.info(`handlePublishedAtYearChange ${year}`);
       this.state.published_at.year(year);
       this.setState(this.state);
     }
