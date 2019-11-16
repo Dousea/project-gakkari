@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
+import BookModal from "./book-modal";
+
 import "../stylesheets/books.scss";
 
 class Books extends React.Component {
@@ -38,9 +40,14 @@ class Books extends React.Component {
 
   render() {
     let newBookButton = (
-      <div className="d-flex justify-content-center">
-        <Link to="/new_book" className="btn btn-outline-primary">Masukkan Buku</Link>
-      </div>
+      <>
+        <div className="d-flex justify-content-center">
+          <button type="button" className="btn btn-outline-primary" data-toggle="modal" data-target="#book-form-modal">
+            Masukkan Buku
+          </button>
+        </div>
+        <BookModal id="book-form-modal" />
+      </>
     );
 
     let books = (
