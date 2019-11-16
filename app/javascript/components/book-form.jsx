@@ -157,7 +157,6 @@ class BookForm extends React.Component {
     else
       author._destroy = true;
 
-    console.info(this.state);
     this.setState(this.state);
   }
 
