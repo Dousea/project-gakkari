@@ -116,7 +116,7 @@ class BookForm extends React.Component {
     else {
       let dateMonth = dateMonthInput.val();
       console.info(`handlePublishedAtDateMonthChange ${dateMonth}`);
-      this.state.published_at.date(dateMonth);
+      this.state.published_at = this.state.published_at.local().date(dateMonth).utc();
       this.setState(this.state);
     }
   }
@@ -124,7 +124,7 @@ class BookForm extends React.Component {
   handlePublishedAtMonthChange(event) {
     let month = $(event.target).find("option:selected").val();
     console.info(`handlePublishedAtMonthChange ${month}`);
-    this.state.published_at.month(month);
+    this.state.published_at = this.state.published_at.local().month(month).utc();
     this.setState(this.state);
   }
 
@@ -138,7 +138,7 @@ class BookForm extends React.Component {
     else {
       let year = yearInput.val();
       console.info(`handlePublishedAtYearChange ${year}`);
-      this.state.published_at.year(year);
+      this.state.published_at = this.state.published_at.local().year(year).utc();
       this.setState(this.state);
     }
   }
