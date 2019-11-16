@@ -166,8 +166,6 @@ class BookForm extends React.Component {
   }
 
   handleAddSubject(event) {
-    // props.handleKey will be included in the `value` so we need to remove it
-    // by subbing the string
     let name = event.target.value.substring(0, event.target.value.length-1);
 
 		if (name !== "") {
