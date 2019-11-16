@@ -237,8 +237,8 @@ class BookForm extends React.Component {
         <input type="hidden" id="form-author-index" value={index} />
         <input type="text"
                className={`form-author-input form-control ${authorsLength === 1 && "rounded-right"}`}
-               value={author.name}
-               onChange={() => this.handleAuthorNameChange(author)}
+               defaultValue={author.name}
+               onBlur={() => this.handleAuthorNameChange(author)}
                placeholder="Masukkan nama penulis"
                required />
         {
@@ -266,14 +266,14 @@ class BookForm extends React.Component {
         <div className="form-group">
           <label htmlFor="form-title-input">Judul</label>
           <input type="text" className="form-control" id="form-title-input"
-                 onChange={event => this.handleTitleChange(event)}
+                 onBlur={event => this.handleTitleChange(event)}
                  placeholder="Masukkan judul" required />
           <div className="invalid-feedback">Tolong masukkan judul yang benar.</div>
         </div>
         <div className="form-group">
           <label htmlFor="form-publisher-input">Penerbit</label>
           <input type="text" className="form-control" id="form-publisher-input"
-                 onChange={event => this.handlePublisherNameChange(event)}
+                 onBlur={event => this.handlePublisherNameChange(event)}
                  placeholder="Masukkan nama penerbit" required />
           <div className="invalid-feedback">Tolong masukkan nama penerbit yang benar.</div>
         </div>
@@ -283,8 +283,8 @@ class BookForm extends React.Component {
             <div className="form-group col-sm-3">
               <small className="text-muted mb-1">Tanggal</small>
               <input type="number" className="form-control" id="form-published-at-date-month-input"
-                     onChange={event => this.handlePublishedAtDateMonthChange(event)}
-                     value={this.state.published_at.local().date()}
+                     onBlur={event => this.handlePublishedAtDateMonthChange(event)}
+                     defaultValue={this.state.published_at.local().date()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan hari yang benar.</div>
             </div>
@@ -302,8 +302,8 @@ class BookForm extends React.Component {
             <div className="form-group col-sm-4">
               <small className="text-muted mb-1">Tahun</small>
               <input type="number" className="form-control" id="form-published-at-year-input"
-                     onChange={event => this.handlePublishedAtYearChange(event)}
-                     value={this.state.published_at.local().year()}
+                     onBlur={event => this.handlePublishedAtYearChange(event)}
+                     defaultValue={this.state.published_at.local().year()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan tahun yang benar.</div>
             </div>
