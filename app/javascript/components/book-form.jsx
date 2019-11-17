@@ -236,7 +236,6 @@ class BookForm extends React.Component {
     let authors = this.state.authors.map((author, index) =>
       author._destroy === false &&
       <div className="input-group" key={index}>
-        <input type="hidden" id="form-author-index" value={index} />
         <input type="text"
                className={`form-author-input form-control ${authorsLength === 1 && "rounded-right"}`}
                defaultValue={author.name}
