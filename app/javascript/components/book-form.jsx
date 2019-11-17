@@ -213,6 +213,7 @@ class BookForm extends React.Component {
       .then(json => {
         let state = this.jsonToState(json);
         console.info(state);
+        this.props.onSubmission(state.id !== null ? true : false);
 
         if (state.id !== null)
           this.resetState();

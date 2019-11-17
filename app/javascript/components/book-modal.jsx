@@ -20,6 +20,7 @@ class BookModal extends React.Component {
 
   resetSaveButton() {
     $("#modal-save-btn")
+      .removeAttr("data-dismiss")
       .removeAttr("disabled")
       .text("Simpan");
   }
@@ -31,11 +32,16 @@ class BookModal extends React.Component {
       this.setSaveButtonAsSaving();
       // Let's handle the submission
       form.trigger("submit");
-      // and then dismiss the modal
-      $("#modal-save-btn").attr("data-dismiss", "modal");
     }
 
     form.addClass("was-validated");
+  }
+
+  onSubmission(successful) {
+    this.resetSaveButton();
+
+    if (successful)
+      $("#modal-save-btn").attr("data-dismiss", "modal");
   }
 
   onClose() {
@@ -60,7 +66,7 @@ class BookModal extends React.Component {
               <h5 className="modal-title">Formulir Buku</h5>
             </div>
             <div className="modal-body">
-              <BookForm id="book-form" />
+              <BookForm id="book-form" onSubmission={successful => this.onSubmission(successful)}/>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" id="modal-close-btn" data-dismiss="modal">Tutup</button>
