@@ -27,6 +27,10 @@ class BookForm extends React.Component {
     this.resetState(true);
   }
 
+  form() {
+    return $(`#${this.props.id}`);
+  }
+
   resetState(notMounted) {
     this.state = {
       id: null,
@@ -221,7 +225,7 @@ class BookForm extends React.Component {
   }
   
   componentDidMount() {
-    $(`#${this.props.id}`)
+    this.form()
       .on("reset", () => setTimeout(() => this.resetState(), 1))
       .on("submit", event => { event.preventDefault(); this.handleSubmission(); });
   }
