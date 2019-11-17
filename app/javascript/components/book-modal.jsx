@@ -8,10 +8,27 @@ class BookModal extends React.Component {
     super(props);
   }
 
+  setSaveButtonAsSaving() {
+    $("#modal-save-btn")
+      .text("")
+      .append(`
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Menyimpan...
+      `)
+      .attr("disabled", "disabled");
+  }
+
+  resetSaveButton() {
+    $("#modal-save-btn")
+      .removeAttr("disabled")
+      .text("Simpan");
+  }
+
   onSave() {
     let form = $("#book-form");
 
     if (form[0].checkValidity() === true) {
+      this.setSaveButtonAsSaving();
       // Let's handle the submission
       form.trigger("submit");
       // and then dismiss the modal
@@ -25,6 +42,8 @@ class BookModal extends React.Component {
     $("#book-form")
       .trigger("reset")
       .removeClass("was-validated");
+    
+    this.resetSaveButton();
   }
   
   componentDidMount() {
