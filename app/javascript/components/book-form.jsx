@@ -163,17 +163,15 @@ class BookForm extends React.Component {
   }
 
   handleAddSubject(event) {
-    let name = event.target.value.substring(0, event.target.value.length-1);
+    const name = event.target.value;
+    this.setState(prevState => ({
+      subjects: [
+        ...prevState.subjects,
+        Object.assign({}, this.emptySubject, { name: name })
+      ]
+    }));
 
-		if (name !== "") {
-      event.target.value = "";
-      this.setState(prevState => ({
-        subjects: [
-          ...prevState.subjects,
-          Object.assign({}, this.emptySubject, { name: name })
-        ]
-      }));
-		}
+    event.target.value = "";
   }
 
   handleRemoveSubject(index) {
@@ -352,9 +350,9 @@ class BookForm extends React.Component {
           <label>Subyek</label>
           <ul className="d-flex flex-wrap p-0 mb-0" id="subject-tags">{subjects}</ul>
           <input type="text" className="form-control" id="form-subjects-input"
-                 onKeyUp={event => event.key === "," && this.handleAddSubject(event)}
+                 onKeyUp={event => event.key === "Enter" && this.handleAddSubject(event)}
                  defaultValue=""
-                 placeholder="Tekan koma untuk menambah subyek" />
+                 placeholder='Tekan "Enter" untuk menambah subyek' />
           <div className="invalid-feedback">Tolong masukkan subyek yang benar.</div>
         </div>
       </form>
