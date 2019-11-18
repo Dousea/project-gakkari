@@ -12,8 +12,3 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(document.createElement("div"))
   );
 });
-
-$(document).on("turbolinks:load", () => {
-  // Disable "enter" key-press event on forms, so it doesn't cause any trouble
-  $("form").bind("keypress", event => { if (event.keyCode == 13) return false; });
-})
