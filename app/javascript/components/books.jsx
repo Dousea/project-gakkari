@@ -68,7 +68,7 @@ class Books extends React.Component {
           {newBookButton}
           <div className="row mt-2">
             {this.state.books.map(book => (
-              <div key={book.id} className="col-lg-4">
+              <div key={book.id} className="col-md-6 col-lg-4">
                 <div className="card mb-4 shadow-sm">
                   <h5 className="card-header">{book.title}</h5>
                   <ul className="list-group list-group-flush">
