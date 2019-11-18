@@ -48,30 +48,22 @@ class BookForm extends React.Component {
   }
 
   stateToJson() {
-    // Evading the holy Unpermitted Parameter errors by sending only relevant keys
     const book = this.state;
-    
-    let authors = [];
-    book.authors.forEach(author => {
-      authors.push({ id: author.id, name: author.name, _destroy: author._destroy });
-    });
-
-    let subjects = [];
-    book.subjects.forEach(subject => {
-      // If the `id` is null and needs to be destroyed then it is still a new
-      // record and doesn't need to be passed to controller
-      if (!(subject.id === null && subject._destroy === true))
-        subjects.push({ id: subject.id, name: subject.name, _destroy: subject._destroy });
-    });
-
     return JSON.stringify({
       book: {
         id: book.id,
         title: book.title,
         publisher: book.publisher.name,
         published_at: book.published_at.toISOString(),
-        authors_attributes: authors,
-        subjects_attributes: subjects
+        authors_attributes: book.authors.map(author => ({
+          id: author.id,
+          name: author.name,
+          _destroy: author._destroy
+        })),
+        // If the `id` is null and needs to be destroyed then it is still a new
+        // record and doesn't need to be passed to controller
+        subjects_attributes: book.subjects.filter(subject => !(subject.id === null && subject._destroy === true))
+          .map(subject => ({ id: subject.id, name: subject.name, _destroy: subject._destroy }))
       }
     });
   }
