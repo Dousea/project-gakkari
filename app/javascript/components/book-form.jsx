@@ -24,15 +24,15 @@ class BookForm extends React.Component {
       _destroy: false
     };
 
-    this.resetState(true);
+    this.state = this.originalState();
   }
 
   form() {
     return $(`#${this.props.id}`);
   }
 
-  resetState(notMounted) {
-    this.state = {
+  originalState() {
+    return {
       id: null,
       title: '',
       publisher: {
@@ -45,12 +45,6 @@ class BookForm extends React.Component {
       authors: [Object.assign({}, this.emptyAuthor)],
       subjects: []
     };
-
-    // We are calling `resetState` in constructor, so we need this variable
-    // to determine whether it is already mounted or not so we can call
-    // `setState`
-    if (!notMounted)
-      this.setState(this.state);
   }
 
   stateToJson() {
@@ -101,13 +95,17 @@ class BookForm extends React.Component {
   }
 
   handleTitleChange(event) {
-    this.state.title = event.target.value;
-    this.setState(this.state);
+    this.setState({ title: event.target.value });
   }
 
   handlePublisherNameChange(event) {
-    this.state.publisher.name = event.target.value;
-    this.setState(this.state);
+    const name = event.target.value;
+    this.setState(prevState => ({
+      publisher: {
+        ...prevState.publisher,
+        name: name
+      }
+    }));
   }
 
   handlePublishedAtDateMonthChange(event) {
@@ -120,16 +118,14 @@ class BookForm extends React.Component {
     else {
       let dateMonth = dateMonthInput.val();
       console.info(`handlePublishedAtDateMonthChange ${dateMonth}`);
-      this.state.published_at = this.state.published_at.local().date(dateMonth).utc();
-      this.setState(this.state);
+      this.setState(prevState => ({ published_at: prevState.published_at.local().date(dateMonth).utc() }));
     }
   }
 
   handlePublishedAtMonthChange(event) {
     let month = $(event.target).find("option:selected").val();
     console.info(`handlePublishedAtMonthChange ${month}`);
-    this.state.published_at = this.state.published_at.local().month(month).utc();
-    this.setState(this.state);
+    this.setState(prevState => ({ published_at: prevState.published_at.local().month(month).utc() }));
   }
 
   handlePublishedAtYearChange(event) {
@@ -142,31 +138,34 @@ class BookForm extends React.Component {
     else {
       let year = yearInput.val();
       console.info(`handlePublishedAtYearChange ${year}`);
-      this.state.published_at = this.state.published_at.local().year(year).utc();
-      this.setState(this.state);
+      this.setState(prevState => ({ published_at: prevState.published_at.local().year(year).utc() }));
     }
   }
 
   handleAddAuthor() {
     console.info("handleAddAuthor");
-    this.state.authors.push(Object.assign({}, this.emptyAuthor));
-    this.setState(this.state);
+    this.setState(prevState => ({ authors: [...prevState.authors, Object.assign({}, this.emptyAuthor)] }));
   }
 
   handleRemoveAuthor(index) {
-    let author = this.state.authors[index];
-    
-    if (author.id === null)
-      this.state.authors.splice(index, 1);
-    else
-      author._destroy = true;
-
-    this.setState(this.state);
+    if (this.state.authors[index].id === null)
+      this.setState(prevState => ({ authors: prevState.authors.filter((_, i) => i !== index) }));
+    else {
+      this.setState(prevState => {
+        const authors = [...prevState.authors];
+        authors[index]._destroy = true;
+        return { authors: authors };
+      });
+    }
   }
 
-  handleAuthorNameChange(author) {
-    author.name = event.target.value;
-    this.setState(this.state);
+  handleAuthorNameChange(event, index) {
+    const name = event.target.value;
+    this.setState(prevState => {
+      const authors = [...prevState.authors];
+      authors[index].name = name;
+      return { authors: authors };
+    });
   }
 
   handleAddSubject(event) {
@@ -174,23 +173,27 @@ class BookForm extends React.Component {
 
 		if (name !== "") {
       event.target.value = "";
-      let newSubject = Object.assign({}, this.emptySubject);
-      newSubject.name = name;
-      this.state.subjects.push(newSubject);
-      this.setState(this.state);
+      this.setState(prevState => ({
+        subjects: [
+          ...prevState.subjects,
+          Object.assign({}, this.emptySubject, { name: name })
+        ]
+      }));
 		}
   }
 
   handleRemoveSubject(index) {
     console.info(`handleRemoveSubject ${index}`);
-    let subject = this.state.subjects[index];
-    
-    if (subject.id === null)
-      this.state.subjects.splice(index, 1);
-    else
-      subject._destroy = true;
 
-    this.setState(this.state);
+    if (this.state.subjects[index].id === null)
+      this.setState(prevState => ({ subjects: prevState.subjects.filter((_, i) => i !== index) }));
+    else {
+      this.setState(prevState => {
+        const subjects = [...prevState.subjects];
+        subjects[index]._destroy = true;
+        return { subjects: subjects };
+      });
+    }
   }
 
   handleErrors() {
@@ -242,7 +245,7 @@ class BookForm extends React.Component {
         this.props.onSubmission(state.id !== null ? true : false);
 
         if (state.id !== null)
-          this.resetState();
+          this.setState(this.originalState());
         else {
           this.setState(state);
           this.handleErrors();
@@ -257,7 +260,7 @@ class BookForm extends React.Component {
     this.form().find("input").on("focusin", event => $(event.target).removeClass("is-invalid"));
 
     this.form()
-      .on("reset", () => setTimeout(() => this.resetState(), 1))
+      .on("reset", () => setTimeout(() => this.setState(this.originalState()), 1))
       .on("submit", event => { event.preventDefault(); this.handleSubmission(); });
   }
   
@@ -268,8 +271,8 @@ class BookForm extends React.Component {
       <div className="input-group" key={index}>
         <input type="text"
                className={`form-author-input form-control ${authorsLength === 1 && "rounded-right"}`}
-               defaultValue={author.name}
-               onBlur={() => this.handleAuthorNameChange(author)}
+               value={author.name}
+               onChange={event => this.handleAuthorNameChange(event, index)}
                data-index={index}
                placeholder="Masukkan nama penulis"
                required />
@@ -298,14 +301,16 @@ class BookForm extends React.Component {
         <div className="form-group">
           <label htmlFor="form-title-input">Judul</label>
           <input type="text" className="form-control" id="form-title-input"
-                 onBlur={event => this.handleTitleChange(event)}
+                 onChange={event => this.handleTitleChange(event)}
+                 value={this.state.title}
                  placeholder="Masukkan judul" required />
           <div className="invalid-feedback">Tolong masukkan judul yang benar.</div>
         </div>
         <div className="form-group">
           <label htmlFor="form-publisher-input">Penerbit</label>
           <input type="text" className="form-control" id="form-publisher-input"
-                 onBlur={event => this.handlePublisherNameChange(event)}
+                 onChange={event => this.handlePublisherNameChange(event)}
+                 value={this.state.publisher.name}
                  placeholder="Masukkan nama penerbit" required />
           <div className="invalid-feedback">Tolong masukkan nama penerbit yang benar.</div>
         </div>
@@ -315,8 +320,8 @@ class BookForm extends React.Component {
             <div className="form-group col-sm-3">
               <small className="text-muted mb-1">Tanggal</small>
               <input type="number" className="form-control" id="form-published-at-date-month-input"
-                     onBlur={event => this.handlePublishedAtDateMonthChange(event)}
-                     defaultValue={this.state.published_at.local().date()}
+                     onChange={event => this.handlePublishedAtDateMonthChange(event)}
+                     value={this.state.published_at.local().date()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan hari yang benar.</div>
             </div>
@@ -334,8 +339,8 @@ class BookForm extends React.Component {
             <div className="form-group col-sm-4">
               <small className="text-muted mb-1">Tahun</small>
               <input type="number" className="form-control" id="form-published-at-year-input"
-                     onBlur={event => this.handlePublishedAtYearChange(event)}
-                     defaultValue={this.state.published_at.local().year()}
+                     onChange={event => this.handlePublishedAtYearChange(event)}
+                     value={this.state.published_at.local().year()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan tahun yang benar.</div>
             </div>
@@ -354,6 +359,7 @@ class BookForm extends React.Component {
           <ul className="d-flex flex-wrap p-0 mb-0" id="subject-tags">{subjects}</ul>
           <input type="text" className="form-control" id="form-subjects-input"
                  onKeyUp={event => event.key === "," && this.handleAddSubject(event)}
+                 defaultValue=""
                  placeholder="Tekan koma untuk menambah subyek" />
           <div className="invalid-feedback">Tolong masukkan subyek yang benar.</div>
         </div>
