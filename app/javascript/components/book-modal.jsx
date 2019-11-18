@@ -26,15 +26,8 @@ class BookModal extends React.Component {
   }
 
   onSave() {
-    let form = $("#book-form");
-
-    if (form[0].checkValidity() === true) {
-      this.setSaveButtonAsSaving();
-      // Let's handle the submission
-      form.trigger("submit");
-    }
-
-    form.addClass("was-validated");
+    this.setSaveButtonAsSaving();
+    $("#book-form").trigger("submit");
   }
 
   onSubmission(successful) {
@@ -45,10 +38,7 @@ class BookModal extends React.Component {
   }
 
   onClose() {
-    $("#book-form")
-      .trigger("reset")
-      .removeClass("was-validated");
-    
+    $("#book-form").trigger("reset");
     this.resetSaveButton();
   }
   
