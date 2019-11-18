@@ -34,7 +34,7 @@ class BookModal extends React.Component {
     this.resetSaveButton();
 
     if (successful)
-      $("#modal-save-btn").attr("data-dismiss", "modal");
+      $(`#${this.props.id}`).modal("hide");
   }
 
   onClose() {
