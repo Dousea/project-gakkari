@@ -40,7 +40,7 @@ class BookForm extends React.Component {
         name: '',
         errors: {}
       },
-      published_at: moment.utc(),
+      publishedAt: moment.utc(),
       errors: {},
       authors: [Object.assign({}, this.emptyAuthor)],
       subjects: []
@@ -54,7 +54,7 @@ class BookForm extends React.Component {
         id: book.id,
         title: book.title,
         publisher: book.publisher.name,
-        published_at: book.published_at.toISOString(),
+        published_at: book.publishedAt.toISOString(),
         authors_attributes: book.authors.map(author => ({
           id: author.id,
           name: author.name,
@@ -81,7 +81,8 @@ class BookForm extends React.Component {
     delete state.subjects_attributes;
 
     // Transform `published_at` type from string to `moment` object
-    state.published_at = moment.utc(state.published_at);
+    state.publishedAt = moment.utc(state.published_at);
+    delete state.published_at;
 
     return state;
   }
@@ -102,7 +103,7 @@ class BookForm extends React.Component {
 
   handlePublishedAtDateMonthChange(event) {
     let dateMonthInput = $(event.target);
-    const currentDaysInMonth = this.state.published_at.local().daysInMonth();
+    const currentDaysInMonth = this.state.publishedAt.local().daysInMonth();
     
     if (dateMonthInput.val() < 1)
       dateMonthInput.val(1);
@@ -111,14 +112,14 @@ class BookForm extends React.Component {
     else {
       let dateMonth = dateMonthInput.val();
       console.info(`handlePublishedAtDateMonthChange ${dateMonth}`);
-      this.setState(prevState => ({ published_at: prevState.published_at.local().date(dateMonth).utc() }));
+      this.setState(prevState => ({ publishedAt: prevState.publishedAt.local().date(dateMonth).utc() }));
     }
   }
 
   handlePublishedAtMonthChange(event) {
     let month = $(event.target).find("option:selected").val();
     console.info(`handlePublishedAtMonthChange ${month}`);
-    this.setState(prevState => ({ published_at: prevState.published_at.local().month(month).utc() }));
+    this.setState(prevState => ({ publishedAt: prevState.publishedAt.local().month(month).utc() }));
   }
 
   handlePublishedAtYearChange(event) {
@@ -132,7 +133,7 @@ class BookForm extends React.Component {
     else {
       let year = yearInput.val();
       console.info(`handlePublishedAtYearChange ${year}`);
-      this.setState(prevState => ({ published_at: prevState.published_at.local().year(year).utc() }));
+      this.setState(prevState => ({ publishedAt: prevState.publishedAt.local().year(year).utc() }));
     }
   }
 
@@ -313,7 +314,7 @@ class BookForm extends React.Component {
               <small className="text-muted mb-1">Tanggal</small>
               <input type="number" className="form-control" id="form-published-at-date-month-input"
                      onChange={event => this.handlePublishedAtDateMonthChange(event)}
-                     value={this.state.published_at.local().date()}
+                     value={this.state.publishedAt.local().date()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan hari yang benar.</div>
             </div>
@@ -321,7 +322,7 @@ class BookForm extends React.Component {
               <small className="text-muted mb-1">Bulan</small>
               <select className="custom-select" id="form-published-at-month-input"
                       onChange={event => this.handlePublishedAtMonthChange(event)}
-                      value={this.state.published_at.local().month()}>
+                      value={this.state.publishedAt.local().month()}>
                 {moment.months().map((month, index) => (
                   <option value={index} key={index}>{month}</option>
                 ))}
@@ -332,7 +333,7 @@ class BookForm extends React.Component {
               <small className="text-muted mb-1">Tahun</small>
               <input type="number" className="form-control" id="form-published-at-year-input"
                      onChange={event => this.handlePublishedAtYearChange(event)}
-                     value={this.state.published_at.local().year()}
+                     value={this.state.publishedAt.local().year()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan tahun yang benar.</div>
             </div>
