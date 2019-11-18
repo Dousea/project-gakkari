@@ -193,13 +193,39 @@ class BookForm extends React.Component {
     this.setState(this.state);
   }
 
+  handleErrors() {
+    const error = this.state.errors;
+    let invalidInputs = [];
+
+    if (error["title"])
+      invalidInputs.push($("#form-title-input"));
+    
+    if (Object.keys(this.state.publisher.errors).length > 0)
+      invalidInputs.push($("#form-publisher-input"));
+    
+    if (error["published_at"])
+      invalidInputs.push($("input[id^=form-published-at]"));
+    
+    if (error["authors"])
+      invalidInputs.push($(".form-authors-input"));
+    
+    if (error["subjects"])
+      invalidInputs.push($("#form-subjects-input"));
+    
+    this.state.authors.forEach((author, index) => {
+      if (Object.keys(author.errors).length > 0)
+        invalidInputs.push($(`.form-author-input[data-index="${index}"]`));
+    });
+
+    invalidInputs.forEach(input => input.addClass("is-invalid"));
+  }
+
   handleSubmission() {
     const method = this.state.id ? 'PATCH' : 'POST';
     const url = this.state.id ? `/api/v1/books/${this.state.id}`
                               : '/api/v1/books/create';
 
     console.info(`handleSubmission ${method} ${url}`);
-    console.info(this.stateToJson());
     
     fetch(url, {
       method: method,
@@ -219,6 +245,7 @@ class BookForm extends React.Component {
           this.resetState();
         else {
           this.setState(state);
+          this.handleErrors();
           throw new Error("Submitted form was not ok.");
         }
       })
@@ -226,6 +253,9 @@ class BookForm extends React.Component {
   }
   
   componentDidMount() {
+    // Removes 'is-invalid' class from elements on focus-in
+    this.form().find("input").on("focusin", event => $(event.target).removeClass("is-invalid"));
+
     this.form()
       .on("reset", () => setTimeout(() => this.resetState(), 1))
       .on("submit", event => { event.preventDefault(); this.handleSubmission(); });
@@ -240,6 +270,7 @@ class BookForm extends React.Component {
                className={`form-author-input form-control ${authorsLength === 1 && "rounded-right"}`}
                defaultValue={author.name}
                onBlur={() => this.handleAuthorNameChange(author)}
+               data-index={index}
                placeholder="Masukkan nama penulis"
                required />
         {
@@ -321,7 +352,7 @@ class BookForm extends React.Component {
         <div className="form-group">
           <label>Subyek</label>
           <ul className="d-flex flex-wrap p-0 mb-0" id="subject-tags">{subjects}</ul>
-          <input type="text" className="form-control"
+          <input type="text" className="form-control" id="form-subjects-input"
                  onKeyUp={event => event.key === "," && this.handleAddSubject(event)}
                  placeholder="Tekan koma untuk menambah subyek" />
           <div className="invalid-feedback">Tolong masukkan subyek yang benar.</div>
