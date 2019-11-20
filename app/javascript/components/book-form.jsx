@@ -269,13 +269,13 @@ class BookForm extends React.Component {
                data-index={index}
                placeholder="Masukkan nama penulis"
                required />
-        {
-          authorsLength > 1 &&
-          <div className="input-group-append">
-            <button type="button" className="btn btn-danger rounded-right"
-                    onClick={() => this.handleRemoveAuthor(index)}>Hapus</button>
-          </div>
-        }
+        <div className="input-group-append">
+          <button type="button"
+                  onClick={() => index < authorsLength-1 ? this.handleRemoveAuthor(index) : this.handleAddAuthor()}
+                  className={`btn btn-${index < authorsLength-1 ? "danger" : "secondary"} rounded-right`}>
+            {index < authorsLength-1 ? "Hapus" : "Tambah"}
+          </button>
+        </div>
         <div className="invalid-feedback">Tolong masukkan nama penulis yang benar.</div>
       </div>
     );
@@ -340,11 +340,7 @@ class BookForm extends React.Component {
           </div>
         </div>
         <div className="form-group">
-          <div className="d-flex justify-content-between align-items-center mb-1">
-            <label>Penulis</label>
-            <button type="button" className="btn btn-sm btn-outline-secondary"
-                    onClick={() => this.handleAddAuthor()}>Tambah</button>
-          </div>
+          <label>Penulis</label>
           <div className="form-group" id="author-forms">{authors}</div>
         </div>
         <div className="form-group">
