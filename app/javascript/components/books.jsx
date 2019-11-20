@@ -82,11 +82,11 @@ class Books extends React.Component {
                     </li>
                     <li className="list-group-item">
                       <small className="d-block text-muted">Ditulis oleh</small>
-                      {book.authors.join(",")}
+                      {book.authors.join(", ")}
                     </li>
                     <li className="list-group-item">
                       <small className="d-block text-muted">Subyek</small>
-                      {book.subjects.join(",")}
+                      {book.subjects.join(", ")}
                     </li>
                   </ul>
                   <div className="card-footer d-flex justify-content-between">
