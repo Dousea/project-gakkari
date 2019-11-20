@@ -313,8 +313,8 @@ class BookForm extends React.Component {
             <div className="form-group col-sm-3">
               <small className="text-muted mb-1">Tanggal</small>
               <input type="number" className="form-control" id="form-published-at-date-month-input"
-                     onChange={event => this.handlePublishedAtDateMonthChange(event)}
-                     value={this.state.publishedAt.local().date()}
+                     onBlur={event => this.handlePublishedAtDateMonthChange(event)}
+                     defaultValue={this.state.publishedAt.local().date()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan hari yang benar.</div>
             </div>
@@ -332,8 +332,8 @@ class BookForm extends React.Component {
             <div className="form-group col-sm-4">
               <small className="text-muted mb-1">Tahun</small>
               <input type="number" className="form-control" id="form-published-at-year-input"
-                     onChange={event => this.handlePublishedAtYearChange(event)}
-                     value={this.state.publishedAt.local().year()}
+                     onBlur={event => this.handlePublishedAtYearChange(event)}
+                     defaultValue={this.state.publishedAt.local().year()}
                      placeholder="..." required />
               <div className="invalid-feedback">Tolong masukkan tahun yang benar.</div>
             </div>
