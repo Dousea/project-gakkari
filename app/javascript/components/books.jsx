@@ -110,12 +110,6 @@ class Books extends React.Component {
             <h1 className="jumbotron-heading">Katalog</h1>
             <p className="lead text-muted">
               Persediaan buku yang ada dalam Perpustakaan Gakkari.
-              Rincian buku juga ditampilkan.
-            </p>
-            <hr className="d-none d-sm-block my-4" />
-            <p className="d-none d-sm-block">
-              Jika ada kesalahan tolong hubungi staff kami atau
-              jadilah anggota dalam Perpustakaan Gakkari!
             </p>
           </div>
         </section>
