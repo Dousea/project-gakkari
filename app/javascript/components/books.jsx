@@ -104,13 +104,14 @@ class Books extends React.Component {
     
     return (
       <>
-        <section className="jumbotron jumbotron-fluid text-center">
+        <section className="jumbotron jumbotron-fluid bg-dark text-center">
           <div className="container">
-            <h1 className="jumbotron-heading">Katalog</h1>
-            <p className="lead text-muted">
+            <h1 className="jumbotron-heading text-white">Katalog</h1>
+            <p className="lead text-white-50">
               Persediaan buku yang ada dalam Perpustakaan Gakkari.
             </p>
-            <button type="button" className="btn btn-outline-primary" data-toggle="modal" data-target="#book-form-modal">
+            <hr className="my-4" />
+            <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#book-form-modal">
               Masukkan Buku
             </button>
           </div>
