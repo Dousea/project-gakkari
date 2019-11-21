@@ -42,30 +42,17 @@ class Books extends React.Component {
   }
 
   render() {
-    let newBookButton = (
-      <>
-        <div className="d-flex justify-content-center">
-          <button type="button" className="btn btn-outline-primary" data-toggle="modal" data-target="#book-form-modal">
-            Masukkan Buku
-          </button>
-        </div>
-        <BookModal id="book-form-modal" />
-      </>
-    );
-
     let books = (
       <>
         <div className="d-flex justify-content-center mb-2">
           <h4 className="text-center">Tidak ada buku yang tersedia.</h4>
         </div>
-        {newBookButton}
       </>
     );
 
     if (this.state.books.length > 0)
       books = (
         <>
-          {newBookButton}
           <div className="row mt-2">
             {this.state.books.map(book => (
               <div key={book.id} className="col-md-6 col-lg-4">
@@ -123,11 +110,15 @@ class Books extends React.Component {
             <p className="lead text-muted">
               Persediaan buku yang ada dalam Perpustakaan Gakkari.
             </p>
+            <button type="button" className="btn btn-outline-primary" data-toggle="modal" data-target="#book-form-modal">
+              Masukkan Buku
+            </button>
           </div>
         </section>
         <div className="py-5 bg-light">
           <div className="container">
             {books}
+            <BookModal id="book-form-modal" />
           </div>
         </div>
       </>
