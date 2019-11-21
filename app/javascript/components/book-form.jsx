@@ -105,7 +105,7 @@ class BookForm extends React.Component {
     let dateMonthInput = $(event.target);
     const currentDaysInMonth = this.state.publishedAt.local().daysInMonth();
     
-    if (Number(dateMonthInput.val()) === NaN || dateMonthInput.val() < 1)
+    if (/^\d+$/.test(dateMonthInput.val()) === false || dateMonthInput.val() < 1)
       dateMonthInput.val(1);
     else if (dateMonthInput.val() > currentDaysInMonth)
       dateMonthInput.val(currentDaysInMonth);
@@ -125,8 +125,8 @@ class BookForm extends React.Component {
   handlePublishedAtYearChange(event) {
     let yearInput = $(event.target);
     const currentYear = moment().year();
-    
-    if (Number(yearInput.val()) === NaN || yearInput.val() < 0)
+
+    if (/^\d+$/.test(yearInput.val()) === false || yearInput.val() < 0)
       yearInput.val(0);
     else if (yearInput.val() > currentYear)
       yearInput.val(currentYear);
