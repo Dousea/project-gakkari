@@ -345,7 +345,7 @@ class BookForm extends React.Component {
         </div>
         <div className="form-group">
           <label>Subyek</label>
-          <ul className="d-flex flex-wrap p-0 mb-0" id="subject-tags">{subjects}</ul>
+          <ul className="subject-tags d-flex flex-wrap p-0 mb-0">{subjects}</ul>
           <input type="text" className="form-control" id="form-subjects-input"
                  onKeyUp={event => event.key === "Enter" && this.handleAddSubject(event)}
                  defaultValue=""

@@ -92,7 +92,13 @@ class Books extends React.Component {
                     </li>
                     <li className="list-group-item">
                       <small className="d-block text-muted">Subyek</small>
-                      {book.subjects.join(", ")}
+                      <ul className="subject-tags d-flex flex-wrap p-0 mb-0">
+                        {book.subjects.map((subject, index) =>
+                          <li className="border rounded bg-light d-flex align-items-center" key={index}>
+                            {subject}
+                          </li>
+                        )}
+                      </ul>
                     </li>
                   </ul>
                   <div className="card-footer d-flex justify-content-between">
