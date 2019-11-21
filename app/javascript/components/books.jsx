@@ -82,7 +82,13 @@ class Books extends React.Component {
                     </li>
                     <li className="list-group-item">
                       <small className="d-block text-muted">Ditulis oleh</small>
-                      {book.authors.join(", ")}
+                      {
+                        book.authors.length > 1
+                        ? <ul id="authors-list">
+                            {book.authors.map((author, index) => <li key={index}>{author}</li>)}
+                          </ul>
+                        : book.authors[0]
+                      }
                     </li>
                     <li className="list-group-item">
                       <small className="d-block text-muted">Subyek</small>
