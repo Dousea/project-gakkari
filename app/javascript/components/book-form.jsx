@@ -104,7 +104,7 @@ class BookForm extends React.Component {
   handlePublishedAtDateMonthChange(event) {
     let dateMonthInput = $(event.target);
     const currentDaysInMonth = this.state.publishedAt.local().daysInMonth();
-    
+
     if (/^\d+$/.test(dateMonthInput.val()) === false || dateMonthInput.val() < 1)
       dateMonthInput.val(1);
     else if (dateMonthInput.val() > currentDaysInMonth)
@@ -263,7 +263,7 @@ class BookForm extends React.Component {
       author._destroy === false &&
       <div className="input-group" key={index}>
         <input type="text"
-               className={`form-author-input form-control ${authorsLength === 1 && "rounded-right"}`}
+               className="form-author-input form-control"
                value={author.name}
                onChange={event => this.handleAuthorNameChange(event, index)}
                data-index={index}
