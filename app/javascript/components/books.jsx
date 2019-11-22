@@ -12,6 +12,7 @@ class Books extends React.Component {
     moment.locale("id");
 
     this.state = {
+      isLoading: true,
       books: []
     };
   }
@@ -37,7 +38,7 @@ class Books extends React.Component {
   componentDidMount() {
     fetch("/api/v1/books/index")
       .then(response => response.json())
-      .then(json => this.setState({ books: json }));
+      .then(json => this.setState({ isLoading: false, books: json.books }));
   }
 
   render() {
