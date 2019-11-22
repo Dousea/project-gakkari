@@ -1,19 +1,19 @@
 class Api::V1::BooksController < ApplicationController
   def index
-    books = Book.paginate(page: params[:page], per_page: 9).order('updated_at DESC').map do |book|
-      {
-        id: book.id,
-        title: book.title,
-        publisher: book.publisher.name,
-        published_at: book.published_at,
-        authors: book.authors.map { |author| author.name },
-        subjects: book.subjects.map { |subject| subject.name },
-        updated_at: book.updated_at
-      }
-    end
+    books = Book.paginate(page: params[:page], per_page: 9)
 
     render json: {
-      books: books,
+      books: books.order('updated_at DESC').map do |book|
+        {
+          id: book.id,
+          title: book.title,
+          publisher: book.publisher.name,
+          published_at: book.published_at,
+          authors: book.authors.map { |author| author.name },
+          subjects: book.subjects.map { |subject| subject.name },
+          updated_at: book.updated_at
+        }
+      end,
       page: books.current_page,
       pages: books.total_pages
     }
