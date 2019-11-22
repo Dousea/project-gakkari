@@ -30,6 +30,10 @@ class Api::V1::BooksController < ApplicationController
     render json: book_json(book), status: result ? 200 : 422
   end
 
+  def show
+    render json: book_json(book)
+  end
+
   def destroy
     book.destroy
     render json: { result: :ok }

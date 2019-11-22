@@ -27,10 +27,6 @@ class BookForm extends React.Component {
     this.state = this.originalState();
   }
 
-  form() {
-    return $(`#${this.props.id}`);
-  }
-
   originalState() {
     return {
       id: null,
@@ -43,7 +39,9 @@ class BookForm extends React.Component {
       publishedAt: moment.utc(),
       errors: {},
       authors: [Object.assign({}, this.emptyAuthor)],
-      subjects: []
+      subjects: [],
+      isFetching: false,
+      isSaving: false
     };
   }
 
@@ -84,7 +82,28 @@ class BookForm extends React.Component {
     state.publishedAt = moment.utc(state.published_at);
     delete state.published_at;
 
+    // Additional states
+    state.isFetching = false;
+    state.isSaving = false;
+
     return state;
+  }
+
+  resetAndHideForm() {
+    this.setState(this.originalState());
+    $("#book-form-modal").modal("hide");
+  }
+
+  fetchData(id) {
+    this.setState({ isFetching: true });
+
+    fetch(`/api/v1/show/${id}`)
+      .then(response => response.json())
+      .then(json => this.setState(this.jsonToState(json)))
+      .catch(error => {
+        console.error(error);
+        this.resetAndHideForm();
+      });
   }
 
   handleTitleChange(event) {
@@ -217,6 +236,8 @@ class BookForm extends React.Component {
   }
 
   handleSubmission() {
+    this.setState({ isSaving: true });
+    
     const method = this.state.id ? 'PATCH' : 'POST';
     const url = this.state.id ? `/api/v1/books/${this.state.id}`
                               : '/api/v1/books/create';
@@ -235,10 +256,9 @@ class BookForm extends React.Component {
       .then(json => {
         let state = this.jsonToState(json);
         console.info(state);
-        this.props.onSubmission(state.id !== null ? true : false);
 
         if (state.id !== null)
-          this.setState(this.originalState());
+          this.resetAndHideForm();
         else {
           this.setState(state);
           this.handleErrors();
@@ -250,14 +270,16 @@ class BookForm extends React.Component {
   
   componentDidMount() {
     // Removes 'is-invalid' class from elements on focus-in
-    this.form().find("input").on("focusin", event => $(event.target).removeClass("is-invalid"));
-
-    this.form()
-      .on("reset", () => setTimeout(() => this.setState(this.originalState()), 1))
-      .on("submit", event => { event.preventDefault(); this.handleSubmission(); });
+    $("#book-form input").on("focusin", event => $(event.target).removeClass("is-invalid"));
+    $("#book-form-modal").on("show.bs.modal", event => {
+      let id = $(event.relatedTarget).data("id");
+      
+      if (!isNaN(parseInt(id)))
+        this.fetchData(id);
+    });
   }
   
-  render() {
+  renderForm() {
     let authorsLength = this.state.authors.filter((value) => value._destroy === false).length
     let authors = this.state.authors.map((author, index) =>
       author._destroy === false &&
@@ -290,7 +312,7 @@ class BookForm extends React.Component {
     );
 
     return (
-      <form id={this.props.id} noValidate>
+      <form id="book-form" noValidate>
         <div className="form-group">
           <label htmlFor="form-title-input">Judul</label>
           <input type="text" className="form-control" id="form-title-input"
@@ -354,6 +376,48 @@ class BookForm extends React.Component {
         </div>
       </form>
     );
+  }
+
+  renderModal() {
+    return (
+      <div className="modal fade" id="book-form-modal" tabIndex="-1" role="dialog" data-keyboard="false" data-backdrop="static" aria-labelledby="book-form-modal" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-scrollable" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Formulir Buku</h5>
+            </div>
+            <div className="modal-body">
+              {
+                this.state.isFetching
+                ? <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                : this.renderForm()
+              }
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => this.resetAndHideForm()}>Tutup</button>
+              <button type="button" className="btn btn-primary" onClick={() => this.handleSubmission()} disabled={this.state.isSaving}>
+                {
+                  this.state.isSaving
+                  ? <>
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Menyimpan...
+                    </>
+                  : <>Simpan</>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    return this.renderModal();
   }
 }
 

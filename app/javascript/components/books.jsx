@@ -1,8 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import moment from "moment";
 
-import BookModal from "./book-modal";
+import BookForm from "./book-form";
 
 import "../stylesheets/books.scss";
 
@@ -91,7 +90,7 @@ class Books extends React.Component {
                   <div className="card-footer d-flex justify-content-between">
                     <small className="d-none d-sm-block text-muted">Diperbaharui<br/>{moment(book.updated_at).fromNow()}</small>
                     <div className="btn-group">
-                      <Link to={`/books/${book.id}/edit`} className="btn btn-outline-secondary">Sunting</Link>
+                      <button type="button" className="btn btn-outline-secondary" data-toggle="modal" data-target="#book-form-modal" data-id={book.id}>Sunting</button>
                       <button type="button" className="btn btn-outline-danger" onClick={() => this.handleDeleteBook(book.id)}>Hapus</button>
                     </div>
                   </div>
@@ -119,7 +118,7 @@ class Books extends React.Component {
         <div className="py-5 bg-light">
           <div className="container">
             {books}
-            <BookModal id="book-form-modal" />
+            <BookForm />
           </div>
         </div>
       </>
