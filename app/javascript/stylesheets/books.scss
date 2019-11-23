@@ -25,6 +25,7 @@
 
 #alert-toast {
   position: fixed;
+  z-index: 99999;
   top: 1em;
   right: 1em;
 }
