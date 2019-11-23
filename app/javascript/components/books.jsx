@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import $ from "jquery";
 import { Pagination } from 'semantic-ui-react';
 
 import BookForm from "./book-form";
@@ -30,13 +31,18 @@ class Books extends React.Component {
       }
     })
       .then(response => {
+        let alertMessage;
+        
         if (response.ok) {
-          this.state.books = this.state.books.filter(book => book.id !== bookId);
-          this.setState(this.state);
+          alertMessage = "Buku telah berhasil dihapus.";
+          
+          this.handlePage(1);
         } else
-          throw new Error("Network response was not ok.");
-      })
-      .catch(error => console.error(error.message));
+          alertMessage = "Buku telah gagal dihapus.";
+
+        $("#alert-toast #alert-toast-text").text(alertMessage);
+        $("#alert-toast").toast("show");
+      });
   }
 
   handlePage(activePage) {
@@ -125,7 +131,7 @@ class Books extends React.Component {
       );
     
     return (
-      <>
+      <div aria-live="polite" aria-atomic="true">
         <section className="jumbotron jumbotron-fluid bg-dark text-center">
           <div className="container">
             <h1 className="jumbotron-heading text-white">Katalog</h1>
@@ -152,9 +158,17 @@ class Books extends React.Component {
             }
             {pagination}
             <BookForm />
+            <div id="alert-toast" className="toast" role="alert" data-delay="3000" aria-live="assertive" aria-atomic="true">
+              <div className="toast-header">
+                <strong id="alert-toast-text" className="mr-auto" />
+                <button type="button" className="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

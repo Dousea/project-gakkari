@@ -23,6 +23,12 @@
   max-width: 36rem;
 }
 
+#alert-toast {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+}
+
 #authors-list {
   padding-inline-start: 1em;
 }

@@ -257,15 +257,23 @@ class BookForm extends React.Component {
         let state = this.jsonToState(json);
         console.info(state);
 
-        if (state.id !== null)
+        let alertMessage;
+
+        if (state.id !== null) {
+          alertMessage = "Buku telah berhasil ditambah.";
+
           this.resetAndHideForm();
+        }
         else {
+          alertMessage = "Buku telah gagal ditambah.";
+
           this.setState(state);
           this.handleErrors();
-          throw new Error("Submitted form was not ok.");
         }
+
+        $("#alert-toast #alert-toast-text").text(alertMessage);
+        $("#alert-toast").toast("show");
       })
-      .catch(error => console.error(error));
   }
   
   componentDidMount() {
