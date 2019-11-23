@@ -4,7 +4,7 @@ import { Pagination } from 'semantic-ui-react';
 
 import BookForm from "./book-form";
 
-// import "../stylesheets/pagination.scss";
+import "../stylesheets/pagination.scss";
 import "../stylesheets/books.scss";
 
 class Books extends React.Component {
@@ -58,10 +58,10 @@ class Books extends React.Component {
   render() {
     let pagination = (
       <Pagination
-        className="my-1 mx-auto"
+        className="mx-auto"
         onPageChange={(_, { activePage }) => this.handlePage(parseInt(activePage, 10))}
         siblingRange="2"
-        defaultActivePage={this.state.activePage}
+        activePage={this.state.activePage}
         totalPages={this.state.totalPages}
       />
     );
@@ -138,7 +138,7 @@ class Books extends React.Component {
             </button>
           </div>
         </section>
-        <div className="bg-light">
+        <div className="pt-2 pb-4 bg-light">
           <div className="container">
             {pagination}
             {
