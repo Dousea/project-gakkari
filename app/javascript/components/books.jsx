@@ -23,7 +23,7 @@ class Books extends React.Component {
   }
 
   handleDeleteBook(bookId) {
-    fetch(`/api/v1/destroy/${bookId}`, {
+    fetch(`/api/v1/books/destroy/${bookId}`, {
       method: "DELETE",
       headers: {
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,

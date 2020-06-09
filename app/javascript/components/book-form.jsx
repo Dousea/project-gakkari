@@ -97,7 +97,7 @@ class BookForm extends React.Component {
   fetchData(id) {
     this.setState({ isFetching: true });
 
-    fetch(`/api/v1/show/${id}`)
+    fetch(`/api/v1/books/show/${id}`)
       .then(response => response.json())
       .then(json => this.setState(this.jsonToState(json)))
       .catch(error => {
