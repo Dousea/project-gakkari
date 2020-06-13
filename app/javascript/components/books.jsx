@@ -4,6 +4,7 @@ import $ from 'jquery'
 import { Pagination } from 'semantic-ui-react'
 
 import BookForm from './book-form'
+import BookAPI from '../helpers/book'
 
 import '../stylesheets/pagination.scss'
 import '../stylesheets/books.scss'
@@ -23,17 +24,11 @@ class Books extends React.Component {
   }
 
   handleDeleteBook(bookId) {
-    fetch(`/api/v1/books/destroy/${bookId}`, {
-      method: 'DELETE',
-      headers: {
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
+    BookAPI.destroy(bookId)
+      .then(success => {
         let alertMessage
         
-        if (response.ok) {
+        if (success) {
           alertMessage = 'Buku telah berhasil dihapus.'
           
           this.handlePage(1)
@@ -47,8 +42,7 @@ class Books extends React.Component {
 
   handlePage(activePage) {
     this.setState({ isLoading: true })
-    fetch(`/api/v1/books/index?page=${activePage}`)
-      .then(response => response.json())
+    BookAPI.getPage(activePage)
       .then(json => this.setState({
         isLoading: false,
         activePage: json.page,
