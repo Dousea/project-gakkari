@@ -3,34 +3,24 @@ import React from 'react'
 import SessionAPI from '../helpers/session'
 import MemberAPI from '../helpers/member'
 
-import Navbar from './navbar'
-
-class Login extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      username: '',
-      password: '',
-      isUnauthorized: false,
-      isAuthorizing: false
-    }
-  }
-
-  render() {
-    return <div></div>
-  }
-}
+import Topbar from './topbar'
+import Login from './login'
+import Books from './books'
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      page: 'books',
       memberInfo: null,
       isAuthorizingMember: true,
       isMemberAuthorized: false
     }
+  }
+
+  handlePage(page) {
+    this.setState({ page: page })
   }
 
   setMemberInfo(id) {
@@ -41,14 +31,8 @@ class Dashboard extends React.Component {
   componentDidMount() {
     SessionAPI.getID()
       .then(id => {
-        this.setState({ isAuthorizingMember: false })
-
-        if (isNaN(id)) {
-          this.props.history.push('/login')
-        } else {
-          this.setMemberInfo(id)
-          this.setState({ isMemberAuthorized: true })
-        }
+        if (!isNaN(id)) this.setMemberInfo(id)
+        this.setState({ isAuthorizingMember: false, isMemberAuthorized: !isNaN(id) })
       })
   }
 
@@ -57,10 +41,18 @@ class Dashboard extends React.Component {
     let isAuthorizedAndLoading = this.state.isMemberAuthorized && this.state.memberInfo === null
     let isLoading = this.state.isAuthorizingMember || isAuthorizedAndLoading
 
+    console.log(this.state)
+
     if (isAuthorizedAndLoaded) {
+      let content = <></>
+
+      switch (this.state.page) {
+        case 'books': content = <Books />; break;
+      }
+
       return (
         <>
-          <Navbar member={this.state.memberInfo} />
+          <Topbar member={this.state.memberInfo} handlePage={this.handlePage} />
           <div id='content' aria-live='polite' aria-atomic='true' className='position-relative'>
             <div id='alert-toast' className='toast' role='alert' data-delay='3000' aria-live='assertive' aria-atomic='true'>
               <div className='toast-header'>
@@ -70,6 +62,7 @@ class Dashboard extends React.Component {
                 </button>
               </div>
             </div>
+            {content}
           </div>
         </>
       )

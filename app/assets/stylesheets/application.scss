@@ -14,14 +14,25 @@
  */
 
 $body-bg: #ddd;
+$topbar-height: 5rem;
 
 body {
   height: 100vh;
+  overflow: hidden;
 }
 
 @import "bootstrap/scss/bootstrap";
 
 #wrapper {
+  height: calc(100% - #{$topbar-height});
+}
+
+#topbar {
+  height: #{$topbar-height};
+}
+
+#content {
+  overflow-y: auto;
   height: 100%;
 }
 
@@ -30,11 +41,6 @@ body {
   border-right: 1px solid #e3e6f0;
   height: 3rem;
   margin: auto 1rem;
-}
-
-.dropdown-menu-right {
-  right: 0;
-  left: auto;
 }
 
 .dropdown.no-arrow {
