@@ -18,7 +18,7 @@ class Topbar extends React.Component {
 
   render() {
     return (
-      <nav id='topbar' className='navbar navbar-expand-lg navbar-light bg-light'>
+      <nav id='topbar' className='navbar navbar-expand-lg navbar-dark bg-primary'>
         <span className='navbar-brand mb-0 h1'>
           <FontAwesomeIcon icon={faBookOpen} className='mr-2' />
           <span className='d-none d-lg-inline'>Sistem Manajemen Perpustakaan</span>
