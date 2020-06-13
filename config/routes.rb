@@ -1,6 +1,15 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      # Sessions
+      post 'sessions/create'
+      post 'sessions/get_id'
+      delete 'sessions/destroy'
+
+      # Members
+      post 'members/show/:id', to: 'members#show'
+
+      # Books
       get 'books/index'
       post 'books/create'
       patch 'books/:id', to: 'books#update'

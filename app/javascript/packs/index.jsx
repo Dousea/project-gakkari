@@ -1,14 +1,16 @@
 import React from "react";
 import { render } from "react-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import $ from 'jquery';
-import Popper from 'popper.js';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import App from "../components/app";
+
+import Routes from "../components/routes";
+
+import "bootstrap/dist/js/bootstrap.bundle.min";
+
+let wrapper = document.createElement("div");
+wrapper.setAttribute("id", "wrapper")
 
 document.addEventListener("DOMContentLoaded", () => {
   render(
-    <App />,
-    document.body.appendChild(document.createElement("div"))
+    <>{Routes}</>,
+    document.body.appendChild(wrapper)
   );
 });
