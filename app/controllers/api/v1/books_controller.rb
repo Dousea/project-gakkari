@@ -24,14 +24,14 @@ class Api::V1::BooksController < ApplicationController
     book_update_attribs_from_params(book)
     result = book.save
 
-    render json: book_json(book), status: result ? 200 : 422
+    render json: book_json(book), status: (result ? :ok : :unprocessable_entity)
   end
 
   def update
     book_update_attribs_from_params(book)
     result = book.save
 
-    render json: book_json(book), status: result ? 200 : 422
+    render json: book_json(book), status: (result ? :ok : :unprocessable_entity)
   end
 
   def show
@@ -40,7 +40,7 @@ class Api::V1::BooksController < ApplicationController
 
   def destroy
     book.destroy
-    render json: { result: :ok }
+    head :no_content
   end
 
   private
