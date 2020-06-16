@@ -1,6 +1,5 @@
 require 'csv'
 
-=begin
 csv_text = File.read(Rails.root.join('lib', 'seeds', 'books_mock_data.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
@@ -37,11 +36,9 @@ csv.each do |row|
     puts "Error saving #{book.title}"
   end
 end
-=end
 
 puts "There are now #{Book.count} rows in the `books` table"
 
-=begin
 csv_text = File.read(Rails.root.join('lib', 'seeds', 'members_mock_data.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
@@ -72,11 +69,9 @@ csv.each do |row|
     puts "Error saving #{row['name']}"
   end
 end
-=end
 
 puts "There are now #{Member.count} rows in the `members` table"
 
-=begin
 csv_text = File.read(Rails.root.join('lib', 'seeds', 'transactions_mock_data.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
@@ -90,6 +85,5 @@ csv.each do |row|
     puts "Error saving ##{row['id']}"
   end
 end
-=end
 
 puts "There are now #{Transaction.count} rows in the `transactions` table"
