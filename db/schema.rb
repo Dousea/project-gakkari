@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_08_153421) do
+ActiveRecord::Schema.define(version: 2020_06_15_110824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "administrators", force: :cascade do |t|
+    t.bigint "user_information_id"
+    t.string "username"
+    t.string "password_digest"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_information_id"], name: "index_administrators_on_user_information_id", unique: true
+  end
 
   create_table "authors", force: :cascade do |t|
     t.string "name"
@@ -45,14 +54,12 @@ ActiveRecord::Schema.define(version: 2020_06_08_153421) do
   end
 
   create_table "members", force: :cascade do |t|
-    t.string "username"
-    t.string "password_digest"
-    t.string "name"
-    t.string "address"
-    t.date "date_of_birth"
-    t.string "phone_number"
+    t.bigint "user_information_id"
+    t.integer "total_books_borrowed"
+    t.integer "max_borrowed_books", default: 5
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_information_id"], name: "index_members_on_user_information_id", unique: true
   end
 
   create_table "publishers", force: :cascade do |t|
@@ -67,4 +74,35 @@ ActiveRecord::Schema.define(version: 2020_06_08_153421) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "member_id"
+    t.bigint "book_id"
+    t.date "date_of_issue"
+    t.date "due_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["book_id"], name: "index_transactions_on_book_id"
+    t.index ["member_id"], name: "index_transactions_on_member_id"
+  end
+
+  create_table "user_informations", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.date "date_of_birth"
+    t.string "phone_number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.date "date_of_birth"
+    t.string "phone_number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "administrators", "user_informations"
+  add_foreign_key "members", "user_informations"
 end

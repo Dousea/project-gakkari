@@ -1,15 +1,12 @@
 const API = {
   async getID() {
-    let response = await fetch("api/v1/sessions/get_id", {
-      method: "POST",
-      headers: { "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content }
-    })
+    let response = await fetch("api/v1/get_session")
     let json = await response.json()
     
     return parseInt(json.id)
   },
   async create(username, password) {
-    let response = await fetch("api/v1/sessions/create", {
+    let response = await fetch("api/v1/create_session", {
       method: "POST",
       headers: {
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
@@ -26,7 +23,7 @@ const API = {
     return response.status == 200
   },
   async destroy() {
-    let response = await fetch("api/v1/sessions/destroy", {
+    let response = await fetch("api/v1/delete_session", {
       method: "DELETE",
       headers: { "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content }
     })

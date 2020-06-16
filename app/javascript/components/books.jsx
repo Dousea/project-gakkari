@@ -1,7 +1,6 @@
 import React from 'react'
 import moment from 'moment'
 import $ from 'jquery'
-import { Pagination } from 'semantic-ui-react'
 
 import BookForm from './book-form'
 import BookAPI from '../helpers/book'
@@ -56,14 +55,27 @@ class Books extends React.Component {
   }
 
   render() {
+    let paginationOptions = [];
+
+    for (let page = 1; page <= this.state.totalPages; page++) {
+      paginationOptions.push(<option key={page} value={page}>{page}</option>)
+    }
+
     let pagination = (
-      <Pagination
-        className='mx-auto'
-        onPageChange={(_, { activePage }) => this.handlePage(parseInt(activePage, 10))}
-        siblingRange='2'
-        activePage={this.state.activePage}
-        totalPages={this.state.totalPages}
-      />
+      <nav>
+        <div className='input-group'>
+          <div className='input-group-prepend'>
+            <button className='btn btn-secondary' type='button'>Kembali</button>
+          </div>
+          <select className='custom-select' value={this.state.activePage}
+                  onChange={event => this.handlePage(parseInt(event.target.value))}>
+            {paginationOptions}
+          </select>
+          <div className='input-group-append'>
+            <button className='btn btn-secondary' type='button'>Lanjut</button>
+          </div>
+        </div>
+      </nav>  
     )
 
     let books = (
@@ -126,34 +138,23 @@ class Books extends React.Component {
     
     return (
       <>
-        <section className='jumbotron jumbotron-fluid bg-dark text-center'>
-          <div className='container'>
-            <h1 className='jumbotron-heading text-white'>Katalog</h1>
-            <p className='lead text-white-50'>
-              Persediaan buku yang ada dalam Perpustakaan Gakkari.
-            </p>
-            <hr className='my-4' />
-            <button type='button' className='btn btn-primary' data-toggle='modal' data-target='#book-form-modal'>
-              Masukkan Buku
-            </button>
-          </div>
-        </section>
-        <div className='pt-2 pb-4 bg-light'>
-          <div className='container'>
-            {pagination}
-            {
-              this.state.isLoading
-              ? <div className='my-5 d-flex justify-content-center'>
-                  <div className='spinner-border' role='status'>
-                    <span className='sr-only'>Loading...</span>
-                  </div>
-                </div>
-              : books
-            }
-            {pagination}
-            <BookForm />
-          </div>
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <span className="h3 mb-0">Buku</span>
+          {this.state.totalPages > 1 && pagination}
+          <button type='button' className='btn btn-primary' data-toggle='modal' data-target='#book-form-modal'>
+            Masukkan Buku
+          </button>
         </div>
+        {
+          this.state.isLoading
+          ? <div className='my-5 d-flex justify-content-center'>
+              <div className='spinner-border' role='status'>
+                <span className='sr-only'>Loading...</span>
+              </div>
+            </div>
+          : books
+        }
+        <BookForm />
       </>
     )
   }

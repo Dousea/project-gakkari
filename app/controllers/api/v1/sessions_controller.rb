@@ -1,26 +1,32 @@
 class Api::V1::SessionsController < ApplicationController
   def create
-    member = Member.find_by(username: params[:session][:username])
+    administrator = Administrator.find_by(username: session_params[:username])
 
-    if member && member.authenticate(params[:session][:password])
-      session[:member_id] = member.id.to_s
+    if administrator && administrator.authenticate(session_params[:password])
+      session[:user_id] = administrator.id.to_s
       head :ok
     else
       head :unauthorized
     end
   end
 
-  def get_id
-    if is_member_logged_in?
-      render json: { id: session[:member_id] }, status: :ok
+  def show
+    if is_user_logged_in?
+      render json: { id: session[:user_id] }, status: :ok
     else
       render json: {}, status: :unauthorized
     end
   end
 
   def destroy
-    session.delete(:member_id)
-    @current_member = nil
+    session.delete(:user_id)
+    @current_user = nil
     head :no_content
+  end
+
+  private
+
+  def session_params
+    params.require(:session).permit(:username, :password)
   end
 end

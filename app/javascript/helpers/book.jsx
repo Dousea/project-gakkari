@@ -11,6 +11,11 @@ const API = {
     })
 
     return response == 204
+  },
+  async getInfo(id) {
+    let response = await fetch(`/api/v1/books/show/${id}`)
+    let json = await response.json()
+    return json
   }
 }
 

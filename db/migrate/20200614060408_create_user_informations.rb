@@ -1,8 +1,6 @@
-class CreateMembers < ActiveRecord::Migration[6.0]
+class CreateUserInformations < ActiveRecord::Migration[6.0]
   def change
-    create_table :members do |t|
-      t.string :username
-      t.string :password_digest
+    create_table :user_informations do |t|
       t.string :name
       t.string :address
       t.date :date_of_birth

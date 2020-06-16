@@ -13,8 +13,35 @@
  *= require_self
  */
 
-$body-bg: #ddd;
+$white: #fff !default;
+$gray-100: #f8f9fc !default;
+$gray-200: #eaecf4 !default;
+$gray-300: #dddfeb !default;
+$gray-400: #d1d3e2 !default;
+$gray-500: #b7b9cc !default;
+$gray-600: #858796 !default;
+$gray-700: #6e707e !default;
+$gray-800: #5a5c69 !default;
+$gray-900: #3a3b45 !default;
+$black: #000 !default;
+
+$blue: #4e73df !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #e83e8c !default;
+$red: #e74a3b !default;
+$orange: #fd7e14 !default;
+$yellow: #f6c23e !default;
+$green: #1cc88a !default;
+$teal: #20c9a6 !default;
+$cyan: #36b9cc !default;
+
+$enable-gradients: true;
+
+$body-bg: $gray-300 !default;
+
 $topbar-height: 5rem;
+$topbar-mb: 1.5rem;
 
 body {
   height: 100vh;
@@ -22,18 +49,22 @@ body {
 }
 
 @import "bootstrap/scss/bootstrap";
+@import "utilities/border";
+@import "utilities/text";
 
 #wrapper {
-  height: calc(100% - #{$topbar-height});
+  height: 100%;
 }
 
 #topbar {
   height: #{$topbar-height};
+  box-shadow: 0 .15rem #{$topbar-mb} 0 #0006 !important;
 }
 
 #content {
   overflow-y: auto;
-  height: 100%;
+  padding-top: #{$topbar-mb};
+  height: calc(100% - #{$topbar-height});
 }
 
 .navbar .navbar-divider {
@@ -49,6 +80,13 @@ body {
   }
 }
 
-.shadow {
-  box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15) !important;
+.login-card {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.login-bg-image {
+  background: image-url('library.jpg');
+  background-position: center;
+  background-size: cover;
 }
